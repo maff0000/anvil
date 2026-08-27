@@ -26,5 +26,10 @@ class HarnessTests(unittest.TestCase):
         self.assertFalse(result.syntactic_validity)
         self.assertIsNotNone(result.error)
 
+    def test_evaluates_named_repair_function(self):
+        tests = Path(__file__).parents[1] / "benchmarks/repair/01_clamp/reference_tests.py"
+        result = evaluate("def clamp(value: int, low: int, high: int):\n    return max(low, min(value, high))", tests, function_name="clamp")
+        self.assertTrue(result.semantic_pass)
+
 
 if __name__ == "__main__": unittest.main()
