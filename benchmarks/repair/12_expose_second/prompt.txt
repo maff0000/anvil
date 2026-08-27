@@ -1,0 +1,1 @@
+Return only the corrected Python function requested in the contract. Do not provide tests, explanation, Markdown prose, or shell commands.

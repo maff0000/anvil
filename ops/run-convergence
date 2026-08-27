@@ -1,0 +1,57 @@
+#!/usr/bin/env python3
+import argparse
+import json
+import sys
+import time
+from datetime import datetime, timezone
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+from anvil.contracts import load_benchmark
+from anvil.convergence import ConvergenceTask, run_task
+from anvil.models import RuntimeConfig
+
+parser = argparse.ArgumentParser()
+parser.add_argument("tasks", nargs="?", default="benchmarks/convergence")
+parser.add_argument("--endpoint")
+parser.add_argument("--model")
+parser.add_argument("--protocol", choices=("openai", "ollama"))
+parser.add_argument("--output-tokens", type=int, default=384)
+parser.add_argument("--timeout", type=float, default=180)
+parser.add_argument("--max-repairs", type=int, default=2, choices=(1, 2))
+parser.add_argument("--repetitions", type=int, default=1)
+args = parser.parse_args()
+
+base = RuntimeConfig.from_environment()
+config = RuntimeConfig(endpoint=args.endpoint or base.endpoint, model=args.model or base.model, protocol=args.protocol or base.protocol, temperature=0.0, output_tokens=args.output_tokens, timeout_seconds=args.timeout, concurrency=1, samples=1, think=False, api_key=base.api_key)
+task_paths = sorted(Path(args.tasks).glob("*/benchmark.yaml"))
+tasks = []
+for path in task_paths:
+    benchmark = load_benchmark(path)
+    tasks.append(ConvergenceTask(benchmark, (path.parent / "initial.py").resolve(strict=True), (path.parent / "visible_tests.py").resolve(strict=True)))
+if not tasks:
+    raise SystemExit("no convergence benchmarks found")
+stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+label = "stage1-2" if args.repetitions == 1 else f"stage3-r{args.repetitions}"
+json_path = ROOT / "results" / f"ANVIL-CODE-003-BOUNDED-CONVERGENCE-{label}-{stamp}.jsonl"
+md_path = json_path.with_suffix(".md")
+records = []
+started = time.monotonic()
+with json_path.open("w", encoding="utf-8") as output:
+    for repetition in range(1, args.repetitions + 1):
+        for task in tasks:
+            record = run_task(task, config, args.max_repairs)
+            record["repetition"] = repetition
+            records.append(record)
+            output.write(json.dumps(record, ensure_ascii=False) + "\n")
+            output.flush()
+green = sum(bool(r["final_green"]) for r in records)
+first = sum(bool(r["calls"] and r["calls"][0]["hidden_evaluation"]["semantic_pass"]) for r in records)
+second = sum(bool(r["final_green"] and r["repair_calls"] == 2) for r in records)
+lines = [f"# ANVIL-CODE-003-BOUNDED-CONVERGENCE — {label}", "", f"- Sequences: {len(records)}", f"- First-repair GREEN: {first} ({first / len(records) * 100:.1f}%)", f"- Second-repair recovery: {second} ({second / len(records) * 100:.1f}%)", f"- Bounded convergence: {green} ({green / len(records) * 100:.1f}%)", f"- Batch wall: {time.monotonic() - started:.3f}s", "", "| Task | GREEN | First repair | Calls (mean) |", "|---|---:|---:|---:|"]
+for task in tasks:
+    group = [r for r in records if r["benchmark"] == task.benchmark.benchmark_id]
+    lines.append(f"| {task.benchmark.benchmark_id} | {sum(r['final_green'] for r in group)}/{len(group)} | {sum(bool(r['calls'] and r['calls'][0]['hidden_evaluation']['semantic_pass']) for r in group)}/{len(group)} | {sum(r['repair_calls'] for r in group) / len(group):.2f} |")
+md_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+print(md_path)
