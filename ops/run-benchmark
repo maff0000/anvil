@@ -17,10 +17,12 @@ parser.add_argument("--endpoint")
 parser.add_argument("--model")
 parser.add_argument("--timeout", type=float)
 parser.add_argument("--output-tokens", type=int)
+parser.add_argument("--think", choices=("true", "false"))
 args = parser.parse_args()
 benchmark = load_benchmark(args.benchmark)
 base = RuntimeConfig.from_environment()
-config = RuntimeConfig(endpoint=args.endpoint or base.endpoint, model=args.model or base.model, timeout_seconds=args.timeout or benchmark.timeout_seconds, output_tokens=args.output_tokens or benchmark.output_tokens, temperature=base.temperature, concurrency=args.concurrency or base.concurrency, samples=args.samples or base.samples)
+think = base.think if args.think is None else args.think == "true"
+config = RuntimeConfig(endpoint=args.endpoint or base.endpoint, model=args.model or base.model, timeout_seconds=args.timeout or benchmark.timeout_seconds, output_tokens=args.output_tokens or benchmark.output_tokens, temperature=base.temperature, concurrency=args.concurrency or base.concurrency, samples=args.samples or base.samples, api_key=base.api_key, think=think)
 records = []
 batch = run(benchmark, config, config.samples, args.mode, config.concurrency, records.append)
 stamp = __import__('datetime').datetime.now(__import__('datetime').timezone.utc).strftime('%Y%m%dT%H%M%SZ')

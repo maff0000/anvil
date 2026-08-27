@@ -11,9 +11,12 @@ class RuntimeConfig:
     temperature: float = 0.0
     concurrency: int = 4
     samples: int = 8
+    api_key: str | None = None
+    think: bool | None = None
 
     @classmethod
     def from_environment(cls) -> "RuntimeConfig":
+        think = os.getenv("ANVIL_THINK")
         return cls(
             endpoint=os.getenv("ANVIL_ENDPOINT", cls.endpoint),
             model=os.getenv("ANVIL_MODEL", cls.model),
@@ -22,6 +25,8 @@ class RuntimeConfig:
             temperature=float(os.getenv("ANVIL_TEMPERATURE", cls.temperature)),
             concurrency=int(os.getenv("ANVIL_CONCURRENCY", cls.concurrency)),
             samples=int(os.getenv("ANVIL_SAMPLES", cls.samples)),
+            api_key=os.getenv("ANVIL_API_KEY"),
+            think=None if think is None else think.lower() in {"1", "true", "yes", "on"},
         )
 
 

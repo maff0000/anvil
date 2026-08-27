@@ -1,0 +1,82 @@
+version: 1
+purpose: broad local model tournament inventory
+benchmark: ANVIL-CODE-001-SLUGIFY
+policy: preserve-code-001-contract-and-evaluator
+candidates:
+  - id: qwen3-30b-a3b-fp4-control
+    model: NVFP4/Qwen3-30B-A3B-Instruct-2507-FP4
+    source: local-vllm
+    status: measured-control
+    evidence: results/ANVIL-CODE-001-SLUGIFY-sequential-20260827T153745Z.md
+  - id: qwen35-35b
+    model: qwen3.5:35b
+    source: ollama
+    quantization: Q4_K_M
+    status: stage0-output-failure
+    evidence: results/ANVIL-CODE-001-SLUGIFY-sequential-20260827T155450Z.md
+  - id: qwen3-coder-30b-a3b-fp4
+    model: NVFP4/Qwen3-Coder-30B-A3B-Instruct-FP4
+    source: local-huggingface-cache
+    quantization: NVFP4
+    status: deployment-blocked-production-gpu-in-use
+  - id: qwen3-coder-next
+    model: Qwen/Qwen3-Coder-Next
+    source: official-huggingface
+    status: not-cached-local
+  - id: glm47-flash-nvfp4
+    model: GadflyII/GLM-4.7-Flash-NVFP4
+    source: local-huggingface-cache
+    quantization: NVFP4
+    status: deployment-blocked-production-gpu-in-use
+  - id: glm45-air
+    model: zai-org/GLM-4.5-Air
+    source: official-huggingface
+    status: deployment-infeasible-on-current-host
+  - id: devstral-small-2
+    model: mistralai/Devstral-Small-2-24B-Instruct-2512
+    source: official-huggingface
+    status: not-cached-local
+  - id: deepseek-r1-32b
+    model: deepseek-r1:32b
+    source: ollama
+    quantization: Q4_K_M
+    status: stage0-output-failure
+    evidence: results/ANVIL-CODE-001-SLUGIFY-sequential-20260827T160548Z.md
+  - id: kimi-k27-code
+    model: moonshotai/Kimi-K2.7-Code
+    source: official-huggingface
+    status: deployment-infeasible-on-current-host
+  - id: kimi-k25
+    model: moonshotai/Kimi-K2.5
+    source: official-huggingface
+    status: deployment-infeasible-on-current-host
+  - id: minimax-m2
+    model: MiniMaxAI/MiniMax-M2
+    source: official-huggingface
+    status: deployment-infeasible-on-current-host
+  - id: qwen3-30b-ollama
+    model: qwen3:30b
+    source: ollama
+    quantization: Q4_K_M
+    status: stage0-output-failure
+    evidence: results/ANVIL-CODE-001-SLUGIFY-sequential-20260827T155810Z.md
+  - id: qwen25-14b
+    model: qwen2.5:14b
+    source: ollama
+    quantization: Q4_K_M
+    status: stage0-semantic-failure
+    evidence: results/ANVIL-CODE-001-SLUGIFY-sequential-20260827T160632Z.md
+  - id: qwen3-30b-a3b-fp8
+    model: Qwen/Qwen3-30B-A3B-Instruct-2507-FP8
+    source: local-huggingface-cache
+    quantization: FP8
+    status: deployment-blocked-production-gpu-in-use
+  - id: qwen3-30b-a3b-thinking-fp8
+    model: Qwen/Qwen3-30B-A3B-Thinking-2507-FP8
+    source: local-huggingface-cache
+    quantization: FP8
+    status: deployment-blocked-production-gpu-in-use
+  - id: gpt-oss-20b
+    model: openai/gpt-oss-20b
+    source: local-huggingface-cache
+    status: deployment-blocked-production-gpu-in-use

@@ -16,8 +16,14 @@ def utc_now() -> str:
 
 
 def infer(config: RuntimeConfig, prompt: str) -> InferenceResponse:
-    body = json.dumps({"model": config.model, "messages": [{"role": "user", "content": prompt}], "temperature": config.temperature, "max_tokens": config.output_tokens}).encode()
-    req = request.Request(config.endpoint.rstrip("/") + "/chat/completions", data=body, headers={"Content-Type": "application/json"}, method="POST")
+    payload = {"model": config.model, "messages": [{"role": "user", "content": prompt}], "temperature": config.temperature, "max_tokens": config.output_tokens}
+    if config.think is not None:
+        payload["think"] = config.think
+    body = json.dumps(payload).encode()
+    headers = {"Content-Type": "application/json"}
+    if config.api_key:
+        headers["Authorization"] = "Bearer " + config.api_key
+    req = request.Request(config.endpoint.rstrip("/") + "/chat/completions", data=body, headers=headers, method="POST")
     with request.urlopen(req, timeout=config.timeout_seconds) as response:
         data = json.loads(response.read())
     choice = data["choices"][0]
