@@ -11,6 +11,7 @@ class Benchmark:
     reference_tests: Path
     output_tokens: int
     timeout_seconds: float
+    target_function: str = "slugify"
 
 
 def load_benchmark(path: str | Path) -> Benchmark:
@@ -39,4 +40,5 @@ def load_benchmark(path: str | Path) -> Benchmark:
         reference_tests=test_path,
         output_tokens=int(data.get("output_tokens", 160)),
         timeout_seconds=float(data.get("timeout_seconds", 60)),
+        target_function=str(data.get("target_function", "slugify")),
     )

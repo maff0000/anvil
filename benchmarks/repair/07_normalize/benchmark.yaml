@@ -1,0 +1,7 @@
+benchmark_id: ANVIL-CODE-002-REPAIR-07-NORMALIZE
+target_function: normalize_key
+contract: contract.md
+prompt: prompt.txt
+reference_tests: reference_tests.py
+output_tokens: 384
+timeout_seconds: 60

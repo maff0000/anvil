@@ -16,7 +16,7 @@ class Evaluation:
     error: str | None = None
 
 
-def extract_python(text: str) -> str:
+def extract_python(text: str, function_name: str = "slugify") -> str:
     candidates = []
     lines = text.splitlines()
     in_fence = False
@@ -36,14 +36,14 @@ def extract_python(text: str) -> str:
             tree = ast.parse(candidate)
         except SyntaxError:
             continue
-        if any(isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name == "slugify" for node in tree.body):
+        if any(isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name == function_name for node in tree.body):
             return candidate
-    raise ValueError("no mechanically extractable slugify implementation")
+    raise ValueError(f"no mechanically extractable {function_name} implementation")
 
 
-def evaluate(text: str, reference_tests: Path, timeout_seconds: float = 5.0) -> Evaluation:
+def evaluate(text: str, reference_tests: Path, timeout_seconds: float = 5.0, function_name: str = "slugify") -> Evaluation:
     try:
-        artifact = extract_python(text)
+        artifact = extract_python(text, function_name)
         compile(artifact, "<generated>", "exec")
     except (SyntaxError, ValueError) as exc:
         return Evaluation(False, False, {"passed": 0, "failed": 0}, str(exc))
@@ -57,11 +57,11 @@ def safe_import(name, globals=None, locals=None, fromlist=(), level=0):
     if name == 're':
         return __import__('re', globals, locals, fromlist, level)
     raise ImportError('imports are not permitted in generated code')
-namespace = {'__builtins__': {'str': str, 'isinstance': isinstance, 'int': int, 'ValueError': ValueError, 'Exception': Exception, 'TypeError': TypeError, 'len': len, 'range': range, 'ord': ord, 'chr': chr, 'list': list, 'tuple': tuple, 'dict': dict, 'all': all, 'any': any, 'type': type, 'filter': filter, 'map': map, 'zip': zip, 'sorted': sorted, 'min': min, 'max': max, '__import__': safe_import}}
+namespace = {'__builtins__': {'str': str, 'isinstance': isinstance, 'int': int, 'ValueError': ValueError, 'Exception': Exception, 'TypeError': TypeError, 'KeyError': KeyError, 'len': len, 'range': range, 'ord': ord, 'chr': chr, 'list': list, 'tuple': tuple, 'dict': dict, 'set': set, 'all': all, 'any': any, 'type': type, 'filter': filter, 'map': map, 'zip': zip, 'sorted': sorted, 'min': min, 'max': max, 'abs': abs, '__import__': safe_import}}
 exec(compile(source, '<generated>', 'exec'), namespace)
-exec(compile('result = run_tests(slugify)', '<tests>', 'exec'), namespace)
+exec(compile('result = run_tests(' + %r + ')', '<tests>', 'exec'), namespace)
 print(json.dumps(namespace['result']))
-""" % payload
+""" % (payload, function_name)
     with tempfile.TemporaryDirectory(prefix="anvil-eval-") as directory:
         try:
             completed = subprocess.run([sys.executable, "-I", "-S", "-c", script], cwd=directory, env={}, capture_output=True, text=True, timeout=timeout_seconds)

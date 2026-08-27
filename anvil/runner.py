@@ -48,7 +48,7 @@ def one_attempt(benchmark: Benchmark, config: RuntimeConfig, sample: int, mode: 
     record: dict[str, object] = {"benchmark": benchmark.benchmark_id, "sample": sample, "mode": mode, "model": config.model, "phase": "inference", "start_utc": start}
     try:
         response = infer(config, benchmark.prompt + "\n\n## Contract\n" + benchmark.task_contract)
-        result = evaluate(response.text, benchmark.reference_tests, min(5.0, benchmark.timeout_seconds))
+        result = evaluate(response.text, benchmark.reference_tests, min(5.0, benchmark.timeout_seconds), benchmark.target_function)
         record.update({"actual_model": response.actual_model, "prompt_tokens": response.prompt_tokens, "output_tokens": response.output_tokens, "reasoning_tokens": response.reasoning_tokens, "total_tokens": response.total_tokens, "finish_reason": response.finish_reason, "raw_response": response.raw_response, "raw_artifact": response.text, "syntactic_validity": result.syntactic_validity, "semantic_pass": result.semantic_pass, "evaluator": result.tests, "error": result.error})
     except Exception as exc:
         record.update({"actual_model": None, "raw_artifact": "", "syntactic_validity": False, "semantic_pass": False, "evaluator": {"passed": 0, "failed": 0}, "error": f"{type(exc).__name__}: {exc}"})

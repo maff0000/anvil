@@ -1,0 +1,48 @@
+#!/usr/bin/env python3
+import argparse
+import json
+import sys
+import time
+from datetime import datetime, timezone
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+
+from anvil.contracts import load_benchmark
+from anvil.models import RuntimeConfig
+from anvil.reporting import write_summary
+from anvil.runner import one_attempt
+
+parser = argparse.ArgumentParser()
+parser.add_argument("tasks", nargs="?", default="benchmarks/repair")
+parser.add_argument("--endpoint")
+parser.add_argument("--model")
+parser.add_argument("--protocol", choices=("openai", "ollama"))
+parser.add_argument("--samples", type=int, default=1)
+parser.add_argument("--output-tokens", type=int, default=384)
+parser.add_argument("--timeout", type=float, default=180)
+args = parser.parse_args()
+
+base = RuntimeConfig.from_environment()
+config = RuntimeConfig(endpoint=args.endpoint or base.endpoint, model=args.model or base.model, protocol=args.protocol or base.protocol, temperature=0.0, output_tokens=args.output_tokens, timeout_seconds=args.timeout, concurrency=1, samples=args.samples, think=False, api_key=base.api_key)
+benchmarks = [load_benchmark(path) for path in sorted(Path(args.tasks).glob("*/benchmark.yaml"))]
+if not benchmarks:
+    raise SystemExit("no repair benchmarks found")
+stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+mode = "stage1" if args.samples == 1 else "stage2"
+json_path = ROOT / "results" / f"ANVIL-CODE-002-BOUNDED-REPAIR-{mode}-{stamp}.jsonl"
+md_path = json_path.with_suffix(".md")
+records = []
+started = time.monotonic()
+with json_path.open("w", encoding="utf-8") as output:
+    for benchmark in benchmarks:
+        for sample in range(1, args.samples + 1):
+            record = one_attempt(benchmark, config, sample, "sequential")
+            record["suite_task"] = benchmark.benchmark_id
+            records.append(record)
+            output.write(json.dumps(record, ensure_ascii=False) + "\n")
+            output.flush()
+batch_seconds = time.monotonic() - started
+write_summary(md_path, records, batch_seconds, mode)
+print(md_path)
