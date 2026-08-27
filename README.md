@@ -1,5 +1,10 @@
 # ANVIL
 
+North star: **PID in → autonomous local-GPU delivery → independently
+scrutinised product out.**
+
+Capability first. Architecture second.
+
 ANVIL measures direct local-model coding capability. Each sample is exactly one
 HTTP inference request; generated code is extracted, compiled, and evaluated in
 a disposable constrained subprocess. ANVIL does not provide model-controlled
@@ -21,4 +26,3 @@ environment variables. Defaults target the local vLLM service at
 
 Results are JSONL attempt evidence plus a compact Markdown summary in
 `results/`; generated artifacts are ignored by Git.
-
