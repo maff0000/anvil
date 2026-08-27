@@ -57,7 +57,7 @@ def safe_import(name, globals=None, locals=None, fromlist=(), level=0):
     if name == 're':
         return __import__('re', globals, locals, fromlist, level)
     raise ImportError('imports are not permitted in generated code')
-namespace = {'__builtins__': {'str': str, 'isinstance': isinstance, 'int': int, 'ValueError': ValueError, 'Exception': Exception, 'TypeError': TypeError, 'KeyError': KeyError, 'len': len, 'range': range, 'ord': ord, 'chr': chr, 'list': list, 'tuple': tuple, 'dict': dict, 'set': set, 'all': all, 'any': any, 'type': type, 'filter': filter, 'map': map, 'zip': zip, 'sorted': sorted, 'min': min, 'max': max, 'abs': abs, '__import__': safe_import}}
+namespace = {'__builtins__': {'str': str, 'bool': bool, 'isinstance': isinstance, 'int': int, 'ValueError': ValueError, 'Exception': Exception, 'TypeError': TypeError, 'KeyError': KeyError, 'len': len, 'range': range, 'ord': ord, 'chr': chr, 'list': list, 'tuple': tuple, 'dict': dict, 'set': set, 'all': all, 'any': any, 'type': type, 'filter': filter, 'map': map, 'zip': zip, 'sorted': sorted, 'min': min, 'max': max, 'abs': abs, '__import__': safe_import}}
 exec(compile(source, '<generated>', 'exec'), namespace)
 exec(compile('result = run_tests(' + %r + ')', '<tests>', 'exec'), namespace)
 print(json.dumps(namespace['result']))

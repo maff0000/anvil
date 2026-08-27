@@ -11,7 +11,6 @@ sys.path.insert(0, str(ROOT))
 
 from anvil.contracts import load_benchmark
 from anvil.models import RuntimeConfig
-from anvil.reporting import write_summary
 from anvil.runner import one_attempt
 
 parser = argparse.ArgumentParser()
@@ -44,5 +43,18 @@ with json_path.open("w", encoding="utf-8") as output:
             output.write(json.dumps(record, ensure_ascii=False) + "\n")
             output.flush()
 batch_seconds = time.monotonic() - started
-write_summary(md_path, records, batch_seconds, mode)
+from statistics import mean, median
+groups = {}
+for record in records:
+    groups.setdefault(record["suite_task"], []).append(record)
+lines = [f"# ANVIL-CODE-002-BOUNDED-REPAIR — {mode}", "", f"- Tasks: {len(groups)}", f"- Attempts: {len(records)}", f"- Overall pass: {sum(bool(r.get('semantic_pass')) for r in records)} ({sum(bool(r.get('semantic_pass')) for r in records) / len(records) * 100:.1f}%)", f"- Batch wall: {batch_seconds:.3f}s", "", "| Task | Pass | Syntax failures | Semantic failures | Truncations | Mean wall | Median wall | Mean output |", "|---|---:|---:|---:|---:|---:|---:|---:|"]
+for task, task_records in groups.items():
+    walls = [float(r["wall_seconds"]) for r in task_records]
+    outputs = [int(r["output_tokens"]) for r in task_records if isinstance(r.get("output_tokens"), int)]
+    passed = sum(bool(r.get("semantic_pass")) for r in task_records)
+    syntax = sum(not r.get("syntactic_validity") for r in task_records)
+    trunc = sum(r.get("finish_reason") == "length" or "timeout" in str(r.get("error", "")) for r in task_records)
+    lines.append(f"| {task} | {passed}/{len(task_records)} | {syntax} | {len(task_records) - passed - syntax} | {trunc} | {mean(walls):.3f}s | {median(walls):.3f}s | {(mean(outputs) if outputs else 0):.1f} |")
+lines += ["", "Raw JSONL preserves the complete response and evaluator record for every attempt."]
+md_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 print(md_path)
