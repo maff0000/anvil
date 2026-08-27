@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+set -eu
+if [ "$#" -lt 1 ]; then
+    echo "usage: run-suite BENCHMARK [run-benchmark options]" >&2
+    exit 2
+fi
+root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+"$root/ops/run-benchmark" "$@" --mode sequential --samples "${ANVIL_SAMPLES:-8}"
+"$root/ops/run-benchmark" "$@" --mode concurrent --samples "${ANVIL_CONCURRENT_SAMPLES:-4}" --concurrency "${ANVIL_CONCURRENCY:-4}"

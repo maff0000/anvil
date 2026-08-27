@@ -1,0 +1,7 @@
+benchmark_id: ANVIL-CODE-001-SLUGIFY
+contract: contract.md
+prompt: prompt.txt
+reference_tests: reference_tests.py
+output_tokens: 160
+timeout_seconds: 60
+

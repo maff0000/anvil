@@ -1,0 +1,3 @@
+Return only the requested Python implementation artifact. Do not provide tests,
+explanation, Markdown prose, or shell commands.
+
