@@ -13,6 +13,7 @@ class RuntimeConfig:
     samples: int = 8
     api_key: str | None = None
     think: bool | None = None
+    protocol: str = "openai"
 
     @classmethod
     def from_environment(cls) -> "RuntimeConfig":
@@ -27,6 +28,7 @@ class RuntimeConfig:
             samples=int(os.getenv("ANVIL_SAMPLES", cls.samples)),
             api_key=os.getenv("ANVIL_API_KEY"),
             think=None if think is None else think.lower() in {"1", "true", "yes", "on"},
+            protocol=os.getenv("ANVIL_PROTOCOL", "openai"),
         )
 
 

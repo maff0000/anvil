@@ -16,16 +16,26 @@ def utc_now() -> str:
 
 
 def infer(config: RuntimeConfig, prompt: str) -> InferenceResponse:
-    payload = {"model": config.model, "messages": [{"role": "user", "content": prompt}], "temperature": config.temperature, "max_tokens": config.output_tokens}
-    if config.think is not None:
-        payload["think"] = config.think
+    if config.protocol == "ollama":
+        payload = {"model": config.model, "messages": [{"role": "user", "content": prompt}], "stream": False, "options": {"temperature": config.temperature, "num_predict": config.output_tokens}}
+        if config.think is not None:
+            payload["think"] = config.think
+        path = "/api/chat"
+    else:
+        payload = {"model": config.model, "messages": [{"role": "user", "content": prompt}], "temperature": config.temperature, "max_tokens": config.output_tokens}
+        if config.think is not None:
+            payload["think"] = config.think
+        path = "/chat/completions"
     body = json.dumps(payload).encode()
     headers = {"Content-Type": "application/json"}
     if config.api_key:
         headers["Authorization"] = "Bearer " + config.api_key
-    req = request.Request(config.endpoint.rstrip("/") + "/chat/completions", data=body, headers=headers, method="POST")
+    req = request.Request(config.endpoint.rstrip("/") + path, data=body, headers=headers, method="POST")
     with request.urlopen(req, timeout=config.timeout_seconds) as response:
         data = json.loads(response.read())
+    if config.protocol == "ollama":
+        message = data.get("message") or {}
+        return InferenceResponse(message.get("content") or "", data.get("model", ""), data.get("prompt_eval_count"), data.get("eval_count"), None, (data.get("prompt_eval_count") or 0) + (data.get("eval_count") or 0), data.get("done_reason"), data)
     choice = data["choices"][0]
     usage = data.get("usage") or {}
     details = usage.get("completion_tokens_details") or {}

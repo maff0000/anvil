@@ -12,22 +12,24 @@ candidates:
     model: qwen3.5:35b
     source: ollama
     quantization: Q4_K_M
-    status: stage0-output-failure
-    evidence: results/ANVIL-CODE-001-SLUGIFY-sequential-20260827T155450Z.md
+    status: stage2-passed-gpu-native-transport-corrected
+    evidence: results/ANVIL-CODE-001-SLUGIFY-sequential-20260827T164644Z.md
   - id: qwen3-coder-30b-a3b-fp4
     model: NVFP4/Qwen3-Coder-30B-A3B-Instruct-FP4
     source: local-huggingface-cache
     quantization: NVFP4
-    status: deployment-blocked-production-gpu-in-use
+    status: stage2-measured-70-percent
+    evidence: results/ANVIL-CODE-001-SLUGIFY-sequential-20260827T164400Z.md
   - id: qwen3-coder-next
     model: Qwen/Qwen3-Coder-Next
     source: official-huggingface
-    status: not-cached-local
+    status: not-tested-resource-blocked
   - id: glm47-flash-nvfp4
     model: GadflyII/GLM-4.7-Flash-NVFP4
     source: local-huggingface-cache
     quantization: NVFP4
-    status: deployment-blocked-production-gpu-in-use
+    status: stage0-output-failure
+    evidence: results/ANVIL-CODE-001-SLUGIFY-sequential-20260827T164010Z.md
   - id: glm45-air
     model: zai-org/GLM-4.5-Air
     source: official-huggingface
@@ -35,7 +37,7 @@ candidates:
   - id: devstral-small-2
     model: mistralai/Devstral-Small-2-24B-Instruct-2512
     source: official-huggingface
-    status: not-cached-local
+    status: not-tested-resource-blocked
   - id: deepseek-r1-32b
     model: deepseek-r1:32b
     source: ollama
@@ -79,4 +81,5 @@ candidates:
   - id: gpt-oss-20b
     model: openai/gpt-oss-20b
     source: local-huggingface-cache
-    status: deployment-blocked-production-gpu-in-use
+    status: stage0-output-failure
+    evidence: results/ANVIL-CODE-001-SLUGIFY-sequential-20260827T164144Z.md
