@@ -4,25 +4,36 @@ This contract is predeclared before any Engineer is spawned. The six work
 items are independent, useful ANVIL enhancements with deliberately mixed task
 shapes. Final execution paths are recorded immediately before each trial.
 
+### Baseline reconciliation
+
+Before execution, Axiom inspected the current Worker-009 tree. The earlier
+model-identifier, sample-count, and classification helpers already exist in
+part or in full. Their entries below therefore measure the next useful
+integration/validation increment rather than re-running identical work. This
+is recorded before any new Engineer is spawned.
+
 All Engineers are fresh native in-session subagents with no Git authority.
 Qwen, when selected, receives only its bounded function contract and uses the
 proven native Ollama path (`qwen3.5:35b`, Q4_K_M, `think=false`, temperature 0,
 maximum two calls after exact mechanical failure). No routing or policy engine
 is introduced.
 
-## Work item 1 — model identifier normalization
+## Work item 1 — runtime setting validation
 
-Useful feature: harden external model-name configuration normalization.
+Useful feature: reject non-positive runtime sample/concurrency settings before
+benchmark execution. The prior model-identifier normalization remains a
+baseline and is not re-run as this work item.
 Expected files: `anvil/models.py`, `tests/test_models.py`, task evidence.
-Acceptance: whitespace normalization is deterministic, invalid values are
-rejected, and `RuntimeConfig.from_environment` behavior remains correct.
-Characteristics: pure helper with an isolated contract and mechanical tests;
-expected good Qwen candidate.
+Acceptance: invalid `ANVIL_SAMPLES` and `ANVIL_CONCURRENCY` values raise clear
+`ValueError`, valid values preserve configuration behavior, and no endpoint or
+model routing behavior changes.
+Characteristics: small pure validation plus configuration-context integration;
+ambiguous mixed candidate.
 
 ## Work item 2 — benchmark loading integration
 
-Useful feature: make optional benchmark sample-count configuration usable by
-the runner without changing legacy benchmarks.
+Useful feature: make the already-parsed optional benchmark sample-count
+configuration usable by the runner without changing legacy benchmarks.
 Expected files: `anvil/contracts.py`, `anvil/runner.py`, relevant tests,
 task evidence.
 Acceptance: absent sample count preserves existing behavior, configured count
@@ -32,8 +43,8 @@ expected native-only candidate.
 
 ## Work item 3 — evidence summary classification
 
-Useful feature: expose a deterministic none/partial/complete acceptance
-classification for benchmark summaries.
+Useful feature: expose the existing deterministic none/partial/complete
+acceptance classification in benchmark summary output.
 Expected files: `anvil/metrics.py`, `anvil/evidence_summary.py`, relevant
 tests, task evidence.
 Acceptance: boundary and invalid cases are covered and summary output remains
