@@ -1,4 +1,5 @@
 import copy
+import math
 import unittest
 
 from anvil.evidence_summary import summarize_attempts
@@ -63,6 +64,19 @@ class EvidenceSummaryTests(unittest.TestCase):
         summary = summarize_attempts([attempt(wall_seconds=9), attempt(wall_seconds=1), attempt(wall_seconds=4)])
         self.assertEqual(summary["wall_seconds_mean"], 14 / 3)
         self.assertEqual(summary["wall_seconds_median"], 4.0)
+
+    def test_very_large_integer_duration_is_valid(self):
+        duration = 10**400
+        summary = summarize_attempts([attempt(wall_seconds=duration)])
+        self.assertEqual(summary["wall_seconds_mean"], duration)
+        self.assertEqual(summary["wall_seconds_median"], duration)
+
+    def test_large_finite_float_aggregates_remain_finite(self):
+        summary = summarize_attempts([attempt(wall_seconds=1e308), attempt(wall_seconds=1e308)])
+        self.assertTrue(math.isfinite(summary["wall_seconds_mean"]))
+        self.assertEqual(summary["wall_seconds_mean"], 1e308)
+        self.assertTrue(math.isfinite(summary["wall_seconds_median"]))
+        self.assertEqual(summary["wall_seconds_median"], 1e308)
 
     def test_unsorted_input_does_not_affect_median(self):
         self.assertEqual(

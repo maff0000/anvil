@@ -1,7 +1,8 @@
 """Deterministic summaries for benchmark attempt evidence."""
 
-from math import isfinite
 from collections.abc import Mapping
+from decimal import Decimal
+from math import isfinite
 
 
 _REQUIRED_FIELDS = (
@@ -17,7 +18,7 @@ def summarize_attempts(records: list[dict[str, object]]) -> dict[str, object]:
     if not records:
         raise ValueError("records must be non-empty")
 
-    wall_seconds: list[float] = []
+    wall_seconds: list[int | float] = []
     accepted = 0
     syntax_failures = 0
     semantic_failures = 0
@@ -39,14 +40,16 @@ def summarize_attempts(records: list[dict[str, object]]) -> dict[str, object]:
             raise ValueError("validity and pass flags must be bool")
         if isinstance(elapsed, bool) or not isinstance(elapsed, (int, float)):
             raise ValueError("wall_seconds must be a finite non-negative number")
-        if not isfinite(elapsed) or elapsed < 0:
+        if isinstance(elapsed, float) and not isfinite(elapsed):
+            raise ValueError("wall_seconds must be a finite non-negative number")
+        if elapsed < 0:
             raise ValueError("wall_seconds must be a finite non-negative number")
         if isinstance(output_tokens, bool) or not isinstance(output_tokens, int):
             raise ValueError("output_tokens must be a non-negative int")
         if output_tokens < 0:
             raise ValueError("output_tokens must be a non-negative int")
 
-        wall_seconds.append(float(elapsed))
+        wall_seconds.append(elapsed)
         output_tokens_total += output_tokens
         if syntactic_validity and semantic_pass:
             accepted += 1
@@ -62,7 +65,10 @@ def summarize_attempts(records: list[dict[str, object]]) -> dict[str, object]:
     if len(ordered_wall_seconds) % 2:
         median = ordered_wall_seconds[middle]
     else:
-        median = (ordered_wall_seconds[middle - 1] + ordered_wall_seconds[middle]) / 2
+        median = (
+            _as_decimal(ordered_wall_seconds[middle - 1])
+            + _as_decimal(ordered_wall_seconds[middle])
+        ) / 2
 
     return {
         "samples": len(records),
@@ -71,6 +77,24 @@ def summarize_attempts(records: list[dict[str, object]]) -> dict[str, object]:
         "semantic_failures": semantic_failures,
         "timeouts_or_truncations": timeouts_or_truncations,
         "output_tokens_total": output_tokens_total,
-        "wall_seconds_mean": float(sum(wall_seconds) / len(wall_seconds)),
-        "wall_seconds_median": float(median),
+        "wall_seconds_mean": _finite_result(
+            sum((_as_decimal(value) for value in wall_seconds), Decimal(0)) / len(wall_seconds)
+        ),
+        "wall_seconds_median": _finite_result(median),
     }
+
+
+def _as_decimal(value: int | float | Decimal) -> Decimal:
+    """Convert a validated duration without imposing float's range limit."""
+    if isinstance(value, float):
+        return Decimal.from_float(value)
+    return Decimal(value)
+
+
+def _finite_result(value: int | float | Decimal) -> int | float | Decimal:
+    """Keep the established float result where possible, otherwise stay Decimal."""
+    try:
+        result = float(value)
+    except OverflowError:
+        return value
+    return result if isfinite(result) else value
