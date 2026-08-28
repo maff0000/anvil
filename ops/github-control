@@ -1,0 +1,101 @@
+#!/usr/bin/env python3
+"""Thin GitHub issue poller for bounded Axiom PL wake/resume."""
+import argparse
+import json
+import os
+import shlex
+import subprocess
+import sys
+import time
+from datetime import datetime, timezone
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+from anvil.github_control import parse_comments
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--repo", default="maff0000/anvil")
+parser.add_argument("--issue", type=int, default=1)
+parser.add_argument("--state", default="/tmp/anvil-github-control-issue-1.json")
+parser.add_argument("--interval", type=float, default=30.0)
+parser.add_argument("--once", action="store_true")
+parser.add_argument("--baseline", action="store_true", help="record the current latest comment without invoking a resume")
+parser.add_argument("--resume-command", help="argv string; message metadata is supplied through ANVIL_GITHUB_* environment variables")
+args = parser.parse_args()
+
+
+def log(status, **fields):
+    record = {"timestamp": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"), "component": "anvil-github-control", "repo": args.repo, "issue": args.issue, "status": status, **fields}
+    print(json.dumps(record, ensure_ascii=False), flush=True)
+
+
+def fetch():
+    command = ["gh", "api", f"repos/{args.repo}/issues/{args.issue}/comments", "--paginate"]
+    result = subprocess.run(command, capture_output=True, text=True)
+    if result.returncode:
+        raise RuntimeError(f"GitHub read failed: {result.stderr.strip()[-500:]}")
+    payload = []
+    for line in result.stdout.splitlines():
+        if line.strip():
+            value = json.loads(line)
+            payload.extend(value if isinstance(value, list) else [value])
+    return payload
+
+
+def read_state():
+    location = Path(args.state)
+    if not location.exists():
+        return {"last_comment_id": 0}
+    return json.loads(location.read_text(encoding="utf-8"))
+
+
+def write_state(comment_id):
+    location = Path(args.state)
+    location.parent.mkdir(parents=True, exist_ok=True)
+    temporary = location.with_suffix(location.suffix + ".tmp")
+    temporary.write_text(json.dumps({"last_comment_id": comment_id}, sort_keys=True) + "\n", encoding="utf-8")
+    temporary.replace(location)
+
+
+def poll_once():
+    state = read_state()
+    comments = fetch()
+    if args.baseline and not Path(args.state).exists():
+        latest = max((int(item["id"]) for item in comments), default=0)
+        write_state(latest)
+        log("baseline", last_comment_id=latest)
+        return 0
+    messages = parse_comments(comments, int(state.get("last_comment_id", 0)))
+    if not messages:
+        log("idle", last_comment_id=state.get("last_comment_id", 0))
+        return 0
+    if not args.resume_command:
+        log("blocked", error_code="RESUME_HOOK_UNCONFIGURED", message="new CGPT message found but no safe resume command was configured", comment_id=messages[0].comment_id)
+        return 3
+    command = shlex.split(args.resume_command)
+    if not command:
+        log("blocked", error_code="RESUME_HOOK_EMPTY", message="resume command parsed empty", comment_id=messages[0].comment_id)
+        return 3
+    for message in messages:
+        environment = os.environ.copy()
+        environment.update({"ANVIL_GITHUB_COMMENT_ID": str(message.comment_id), "ANVIL_GITHUB_MESSAGE": message.body, "ANVIL_GITHUB_REPO": args.repo, "ANVIL_GITHUB_ISSUE": str(args.issue)})
+        log("resume_start", comment_id=message.comment_id, command=command[0])
+        result = subprocess.run(command, env=environment)
+        if result.returncode:
+            log("resume_failed", error_code="RESUME_COMMAND_FAILED", comment_id=message.comment_id, returncode=result.returncode)
+            return result.returncode or 4
+        write_state(message.comment_id)
+        log("resume_complete", comment_id=message.comment_id)
+    return 0
+
+
+while True:
+    try:
+        code = poll_once()
+    except Exception as exc:
+        log("error", error_code="POLL_FAILED", message=str(exc))
+        code = 5
+    if args.once or code not in (0,):
+        raise SystemExit(code)
+    time.sleep(args.interval)
