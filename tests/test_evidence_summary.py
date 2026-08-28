@@ -2,7 +2,7 @@ import copy
 import math
 import unittest
 
-from anvil.evidence_summary import summarize_attempts
+from anvil.evidence_summary import parse_passed_total, summarize_attempts
 
 
 def attempt(**overrides):
@@ -17,6 +17,38 @@ def attempt(**overrides):
 
 
 class EvidenceSummaryTests(unittest.TestCase):
+    def test_parse_passed_total_accepts_valid_ascii_counts(self):
+        for value, expected in (("0/1", (0, 1)), ("3/3", (3, 3)), ("03/10", (3, 10))):
+            with self.subTest(value=value):
+                self.assertEqual(parse_passed_total(value), expected)
+
+    def test_parse_passed_total_rejects_malformed_or_out_of_range_values(self):
+        invalid = (
+            " 1/2",
+            "1 /2",
+            "1/2 ",
+            "1",
+            "1//2",
+            "4/3",
+            "1/0",
+            "١/٢",
+            "1/100001",
+            "100001/100001",
+            "",
+            "/1",
+            "1/",
+        )
+        for value in invalid:
+            with self.subTest(value=value):
+                with self.assertRaises(ValueError):
+                    parse_passed_total(value)
+
+    def test_parse_passed_total_rejects_non_string_values(self):
+        for value in (None, 1, b"1/2"):
+            with self.subTest(value=value):
+                with self.assertRaises(ValueError):
+                    parse_passed_total(value)
+
     def test_valid_mixed_records(self):
         records = [
             attempt(wall_seconds=4, output_tokens=12),
@@ -28,6 +60,7 @@ class EvidenceSummaryTests(unittest.TestCase):
             {
                 "samples": 3,
                 "accepted": 1,
+                "classify_success_rate": "partial",
                 "syntax_failures": 1,
                 "semantic_failures": 1,
                 "timeouts_or_truncations": 0,
@@ -40,6 +73,19 @@ class EvidenceSummaryTests(unittest.TestCase):
     def test_accepted_requires_both_flags(self):
         records = [attempt(), attempt(syntactic_validity=False), attempt(semantic_pass=False)]
         self.assertEqual(summarize_attempts(records)["accepted"], 1)
+
+    def test_classify_success_rate_reflects_accepted_sample_count(self):
+        self.assertEqual(
+            summarize_attempts([attempt(), attempt(semantic_pass=False)])[
+                "classify_success_rate"
+            ],
+            "partial",
+        )
+        self.assertEqual(summarize_attempts([attempt()])["classify_success_rate"], "complete")
+        self.assertEqual(
+            summarize_attempts([attempt(semantic_pass=False)])["classify_success_rate"],
+            "none",
+        )
 
     def test_syntax_and_semantic_failures_are_partitioned(self):
         records = [

@@ -4,6 +4,8 @@ from collections.abc import Mapping
 from decimal import Decimal
 from math import isfinite
 
+from anvil.metrics import classify_success_rate
+
 
 _REQUIRED_FIELDS = (
     "syntactic_validity",
@@ -11,6 +13,37 @@ _REQUIRED_FIELDS = (
     "wall_seconds",
     "output_tokens",
 )
+
+
+def parse_passed_total(value: str) -> tuple[int, int]:
+    """Parse a strict ASCII ``passed/total`` evidence field."""
+    if not isinstance(value, str):
+        raise ValueError("Input must be a string")
+
+    parts = value.split('/')
+    if len(parts) != 2:
+        raise ValueError("Must contain exactly one slash")
+
+    num_str, denom_str = parts
+
+    for value_part in [num_str, denom_str]:
+        if not value_part:
+            raise ValueError("Numerator or denominator cannot be empty")
+        for character in value_part:
+            if ord(character) < 48 or ord(character) > 57:
+                raise ValueError("Counts must contain ASCII decimal digits")
+
+    numerator = int(num_str)
+    denominator = int(denom_str)
+
+    if denominator <= 0:
+        raise ValueError("Denominator must be positive")
+    if numerator > denominator:
+        raise ValueError("Numerator cannot exceed denominator")
+    if numerator > 100000 or denominator > 100000:
+        raise ValueError("Values exceed maximum of 100000")
+
+    return (numerator, denominator)
 
 
 def summarize_attempts(records: list[dict[str, object]]) -> dict[str, object]:
@@ -73,6 +106,7 @@ def summarize_attempts(records: list[dict[str, object]]) -> dict[str, object]:
     return {
         "samples": len(records),
         "accepted": accepted,
+        "classify_success_rate": classify_success_rate(accepted, len(records)),
         "syntax_failures": syntax_failures,
         "semantic_failures": semantic_failures,
         "timeouts_or_truncations": timeouts_or_truncations,

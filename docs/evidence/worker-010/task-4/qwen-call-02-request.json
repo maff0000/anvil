@@ -1,0 +1,8 @@
+{
+  "model": "qwen3.5:35b",
+  "messages": [{"role": "user", "content": "Generate only Python code for parse_passed_total(value: str) -> tuple[int, int]. Contract: exactly ASCII [0-9]+/[0-9]+, no whitespace; denominator positive; numerator <= denominator; both <=100000; otherwise ValueError. Prior attempt failed because str.isdigit() accepts Unicode digits. Use explicit ASCII [0-9] checking."}],
+  "think": false,
+  "temperature": 0,
+  "stream": false,
+  "options": {"num_predict": 384}
+}

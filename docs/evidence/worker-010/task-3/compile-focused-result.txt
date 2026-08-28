@@ -1,0 +1,5 @@
+Command: python3 -m compileall -q anvil tests; python3 -m unittest tests.test_metrics tests.test_evidence_summary
+Compile: PASS (status 0)
+Focused test invocation: FAIL (status 1)
+Failure: ModuleNotFoundError: No module named 'tests.test_metrics' and No module named 'tests.test_evidence_summary'
+Cause: test package/module discovery invocation, not a code assertion failure.

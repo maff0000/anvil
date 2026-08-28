@@ -1,0 +1,15 @@
+{
+  "model": "qwen3.5:35b",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Generate only the following Python function artifact, with no explanation, markdown fences, imports, or surrounding text:\n\nclassify_success_rate(accepted: int, samples: int) -> str\n\nContract: both args must be int and not bool; samples must be positive; accepted must be in [0, samples]; invalid inputs raise ValueError. Return \"none\" for accepted=0, \"partial\" for accepted<samples, and \"complete\" when equal. Standard library only, deterministic, no filesystem/network/global state. Examples: (0,4)->\"none\", (2,4)->\"partial\", (4,4)->\"complete\". Return only the artifact."
+    }
+  ],
+  "think": false,
+  "stream": false,
+  "options": {
+    "temperature": 0,
+    "num_predict": 384
+  }
+}

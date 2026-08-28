@@ -1,0 +1,7 @@
+`python3 -m py_compile anvil/reporting.py`
+
+Result: exit 0, no output.
+
+`python3 -m compileall -q anvil tests`
+
+Result: exit 0, no output.

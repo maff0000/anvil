@@ -56,8 +56,9 @@ def one_attempt(benchmark: Benchmark, config: RuntimeConfig, sample: int, mode: 
     return record
 
 
-def run(benchmark: Benchmark, config: RuntimeConfig, samples: int, mode: str, concurrency: int, emit: Callable[[dict[str, object]], None]) -> float:
+def run(benchmark: Benchmark, config: RuntimeConfig, samples: int | None, mode: str, concurrency: int, emit: Callable[[dict[str, object]], None]) -> float:
     started = time.monotonic()
+    samples = samples if samples is not None else benchmark.sample_count or config.samples
     if mode == "sequential":
         for sample in range(1, samples + 1): emit(one_attempt(benchmark, config, sample, mode))
     else:

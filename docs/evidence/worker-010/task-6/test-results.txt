@@ -1,0 +1,6 @@
+# Validation results
+
+- `python3 -m py_compile anvil/reporting.py`: PASS
+- `python3 -m compileall -q anvil tests`: PASS
+- `python3 -m unittest discover -s tests -p 'test_reporting.py'`: PASS, 12 tests
+- `python3 -m unittest discover -s tests`: PASS, 57 tests

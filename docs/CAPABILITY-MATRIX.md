@@ -18,6 +18,7 @@
 | Exclusive Ollama Qwen re-proof | WORKER-007: one exact Qwen3.5 Q4_K_M call passed with 26.8 GB Ollama VRAM residency; production restored | OLLAMA_QWEN_GPU_BACKING_VERIFIED / LOCAL_QWEN_CONTRACT_VIABLE |
 | Native Engineer + verified local Qwen integration | WORKER-008: Qwen artifact passed on attempt 2, was retained without semantic rewrite, integrated into outcome reporting, and production was restored | HYBRID_NATIVE_QWEN_VIABLE |
 | Hybrid reliability across four task classes | WORKER-009: 3/4 first-call Qwen GREEN, 4/4 within two calls, all final audits GREEN; one evidence-integrity recovery required | HYBRID_RELIABILITY_VIABLE |
+| Manual delegation decision quality | WORKER-010: 6/6 final features GREEN; 5/6 choices judged GOOD, one Qwen-selected task was a retrospective regret | DELEGATION_DECISION_VIABLE |
 
 Raw benchmark corpora remain local under `results/`; ignored output is
 evidence, not application logic.
