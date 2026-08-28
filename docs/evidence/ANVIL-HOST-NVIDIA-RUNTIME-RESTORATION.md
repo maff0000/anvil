@@ -2,9 +2,10 @@
 
 Date: 2026-08-28 UTC
 Branch: `feature/worker-006-local-runtime-reproof`
-Classification: **NVIDIA_RUNTIME_RESTORED_GPU_VERIFIED**
+Current classification: **NVIDIA_RUNTIME_VERIFIED_SANDBOX_ISOLATED**
+Ollama Qwen classification: **OLLAMA_QWEN_GPU_BACKING_UNVERIFIED**
 
-## Initial apparent failure
+## Initial apparent failure (superseded current interpretation)
 
 From the managed Axiom shell, `nvidia-smi` failed and `/dev/nvidia*` was
 absent. Read-only inspection nevertheless showed PCI device `01:00.0` bound
@@ -14,7 +15,9 @@ an RTX 5090 with active video memory.
 The shell is PID 1 inside `codex-linux-sandbox`. Its `/dev` is a restricted
 read-only device namespace. This explained the apparent contradiction: the
 shell could see host kernel/proc state but not the NVIDIA character devices.
-No host repair was attempted.
+No host repair was attempted. This initial shell-local observation is retained
+as historical evidence but is superseded by the later container-level proof
+below; it must not be read as a current host-runtime failure.
 
 ## Host/container runtime evidence
 

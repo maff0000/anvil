@@ -14,7 +14,7 @@
 | Native in-session Codex subagent | WORKER-002: one bounded Engineer → PL reconciliation → fresh Auditor cycle completed GREEN | NATIVE_SUBAGENT_VIABLE |
 | Native multi-Engineer decomposition/integration | WORKER-004: two scoped Engineers, two bounded repairs, fresh final Auditor GREEN | NATIVE_MULTI_ENGINEER_VIABLE |
 | Native Engineer + bounded local GPU delegation | WORKER-005: two bounded artifacts; second failed corrected exact-rounding case; no integration | LOCAL_GPU_DELEGATION_REJECTED_RUNTIME_UNVERIFIED |
-| Local GPU runtime re-proof | WORKER-006 shell view was sandbox-isolated; existing GPU-enabled containers prove RTX 5090/runtime and production vLLM use | NVIDIA_RUNTIME_RESTORED_GPU_VERIFIED (Ollama-specific Qwen use unverified) |
+| Local GPU runtime re-proof | WORKER-006 historical shell view was sandbox-isolated; current container evidence proves NVIDIA runtime, while Ollama Qwen use remains unverified | NVIDIA_RUNTIME_VERIFIED_SANDBOX_ISOLATED / OLLAMA_QWEN_GPU_BACKING_UNVERIFIED |
 
 Raw benchmark corpora remain local under `results/`; ignored output is
 evidence, not application logic.
