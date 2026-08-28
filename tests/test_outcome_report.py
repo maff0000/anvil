@@ -93,3 +93,32 @@ def test_render_formats_very_large_integer_duration() -> None:
         f"| 1 | accepted | true | true | false | {formatted_duration} | 7 |"
         in report
     )
+
+
+def test_render_aggregates_huge_and_small_integer_durations_exactly() -> None:
+    duration = 10**400 + 1
+    report = render_outcome_report(
+        [
+            outcome("accepted", True, True, False, duration, 1),
+            outcome("accepted", True, True, False, 0, 2),
+        ]
+    )
+
+    expected = f"{duration // 2}.{500000 if duration % 2 else 0:06d}"
+    assert f"- Mean wall seconds: {expected}" in report
+    assert f"- Median wall seconds: {expected}" in report
+
+
+def test_render_even_median_keeps_exact_fraction_before_formatting() -> None:
+    huge = 10**400
+    report = render_outcome_report(
+        [
+            outcome("accepted", True, True, False, 0, 1),
+            outcome("accepted", True, True, False, huge + 1, 1),
+            outcome("accepted", True, True, False, huge + 2, 1),
+            outcome("accepted", True, True, False, huge + 3, 1),
+        ]
+    )
+
+    expected = f"{huge + 1}.{500000:06d}"
+    assert f"- Median wall seconds: {expected}" in report

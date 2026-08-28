@@ -1,8 +1,7 @@
 """Deterministic Markdown rendering for normalized attempt outcomes."""
 
 from collections.abc import Sequence
-from decimal import Decimal
-from statistics import median
+from fractions import Fraction
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -34,12 +33,18 @@ def render_outcome_report(outcomes: Sequence["AttemptOutcome"]) -> str:
         outcome.output_tokens for outcome in ordered_outcomes
     )
 
-    mean_wall_seconds = sum(
-        (_as_decimal(value) for value in wall_seconds), Decimal(0)
-    ) / len(wall_seconds)
-    median_wall_seconds = median(
-        (_as_decimal(value) for value in wall_seconds)
+    exact_wall_seconds = [_as_fraction(value) for value in wall_seconds]
+    mean_wall_seconds = sum(exact_wall_seconds, Fraction(0)) / len(
+        exact_wall_seconds
     )
+    ordered_wall_seconds = sorted(exact_wall_seconds)
+    middle = len(ordered_wall_seconds) // 2
+    if len(ordered_wall_seconds) % 2:
+        median_wall_seconds = ordered_wall_seconds[middle]
+    else:
+        median_wall_seconds = (
+            ordered_wall_seconds[middle - 1] + ordered_wall_seconds[middle]
+        ) / 2
 
     lines = [
         "# Outcome Report",
@@ -73,13 +78,21 @@ def render_outcome_report(outcomes: Sequence["AttemptOutcome"]) -> str:
     return "\n".join(lines) + "\n"
 
 
-def _as_decimal(value: int | float | Decimal) -> Decimal:
-    """Convert a validated numeric duration without binary re-rounding."""
-    return Decimal.from_float(value) if isinstance(value, float) else Decimal(value)
+def _as_fraction(value: int | float) -> Fraction:
+    """Convert a validated duration without losing any numeric precision."""
+    return Fraction.from_float(value) if isinstance(value, float) else Fraction(value)
 
 
-def _format_seconds(value: int | float | Decimal) -> str:
-    return f"{_as_decimal(value):.6f}"
+def _format_seconds(value: Fraction | int | float) -> str:
+    """Format a non-negative duration to six places using round-half-even."""
+    exact = value if isinstance(value, Fraction) else _as_fraction(value)
+    scaled, remainder = divmod(exact.numerator * 1_000_000, exact.denominator)
+    if remainder * 2 > exact.denominator or (
+        remainder * 2 == exact.denominator and scaled % 2
+    ):
+        scaled += 1
+    whole, fraction = divmod(scaled, 1_000_000)
+    return f"{whole}.{fraction:06d}"
 
 
 def _format_bool(value: bool) -> str:

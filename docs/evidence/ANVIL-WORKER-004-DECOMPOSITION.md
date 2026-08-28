@@ -1,6 +1,6 @@
 # ANVIL-WORKER-004 decomposition
 
-Parent work item: `ANVIL-WORKER-004-NATIVE-MULTI-ENGINEER`  
+Parent work item: `ANVIL-WORKER-004-NATIVE-MULTI-ENGINEER`
 Feature: deterministic benchmark-result outcome normalization and rendering
 
 ## Engineer A — outcome normalization
