@@ -83,7 +83,8 @@ administrative defect and performed the required final checks. The runtime
 block, unchanged contract, inference abstention, and `NOT_MEASURED` capability
 conclusion remained supported; no inference should be inferred from the
 available evidence and no invasive runtime repair or new governance machinery
-is justified.
+is justified. The final fresh Auditor returned `GREEN` with high confidence
+and `classification_supported: yes`.
 
 ## Governance lessons
 
