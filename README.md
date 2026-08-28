@@ -5,6 +5,9 @@ scrutinised product out.**
 
 Capability first. Architecture second.
 
+The enduring destination and operating boundaries are documented in
+[ANVIL North Star](docs/ANVIL-NORTH-STAR.md).
+
 ANVIL measures direct local-model coding capability. Each sample is exactly one
 HTTP inference request; generated code is extracted, compiled, and evaluated in
 a disposable constrained subprocess. ANVIL does not provide model-controlled
