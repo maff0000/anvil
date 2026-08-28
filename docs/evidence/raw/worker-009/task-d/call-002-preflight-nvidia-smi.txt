@@ -1,0 +1,2 @@
+Captured 2026-08-28T10:35:03.790800836Z via: docker exec ollama nvidia-smi
+No running processes found; GPU memory 34MiB / 32607MiB.

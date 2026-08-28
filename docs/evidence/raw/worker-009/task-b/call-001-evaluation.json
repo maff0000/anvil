@@ -1,0 +1,33 @@
+{
+  "artifact_status": "pass",
+  "extraction": "Raw response content was extracted mechanically as one Python function artifact; no repair applied.",
+  "compile": "pass",
+  "execution": "pass in disposable constrained namespace with standard builtins only",
+  "contract_checks": {
+    "valid_1": "pass",
+    "valid_008": "pass",
+    "valid_100000": "pass",
+    "reject_empty": "pass",
+    "reject_surrounding_whitespace": "pass",
+    "reject_decimal_signs_and_decimal_point": "pass",
+    "reject_zero_and_upper_bound": "pass",
+    "reject_non_ascii_digits": "pass",
+    "reject_non_string_and_bool": "pass",
+    "no_filesystem_network_global_state": "pass"
+  },
+  "metadata": {
+    "model": "qwen3.5:35b",
+    "quantization": "Q4_K_M",
+    "think": false,
+    "temperature": 0,
+    "output_cap": 384,
+    "prompt_tokens": 153,
+    "output_tokens": 155,
+    "finish_reason": "stop",
+    "total_duration_ns": 1214973301,
+    "load_duration_ns": 94956116,
+    "prompt_eval_duration_ns": 67889024,
+    "eval_duration_ns": 898178680,
+    "wall_elapsed_seconds": 1.21
+  }
+}

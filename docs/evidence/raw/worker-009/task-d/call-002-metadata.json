@@ -1,0 +1,22 @@
+{
+  "call": 2,
+  "model_requested": "qwen3.5:35b",
+  "model_returned": "qwen3.5:35b",
+  "quantization": "Q4_K_M",
+  "endpoint": "http://127.0.0.1:11434/api/chat",
+  "think": false,
+  "temperature": 0,
+  "output_cap": 384,
+  "start_utc": "2026-08-28T10:35:25.463794Z",
+  "end_utc": "2026-08-28T10:35:31.770102Z",
+  "wall_seconds": 6.306335913017392,
+  "http_status": 200,
+  "done": true,
+  "finish_reason": "stop",
+  "prompt_eval_count": 139,
+  "prompt_eval_duration_ns": 68381519,
+  "eval_count": 114,
+  "eval_duration_ns": 784934024,
+  "total_duration_ns": 6293029194,
+  "load_duration_ns": 5269429135
+}

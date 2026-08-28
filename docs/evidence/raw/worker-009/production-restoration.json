@@ -1,0 +1,13 @@
+{
+  "restored_at_utc": "2026-08-28T10:42:40Z",
+  "action": "docker start local-ai-vllm",
+  "container": "local-ai-vllm",
+  "status": "running; verified after Task D call-002",
+  "published_health": "http://127.0.0.1:8010/health",
+  "health_http": 200,
+  "model": "NVFP4/Qwen3-30B-A3B-Instruct-2507-FP4",
+  "revision": "585a2c9e794deb856281697ca21a1c5090157b85",
+  "gpu": {"device": "NVIDIA GeForce RTX 5090", "memory_used_mib": 25472, "memory_total_mib": 32607, "process": "vLLM"},
+  "litellm": {"root_health_http": 401, "meaning": "reachable; authentication required", "secrets_included": false},
+  "configuration_changed": false
+}

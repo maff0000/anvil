@@ -1,0 +1,30 @@
+{
+  "artifact_status": "pass",
+  "extraction": "AST parsed exactly one function definition from the fenced Python artifact; no repair applied.",
+  "compile": "pass",
+  "execution": "pass in disposable constrained namespace with only required builtins (isinstance, str, ValueError)",
+  "contract_checks": {
+    "trim": "pass",
+    "collapse_internal_whitespace_to_ascii_space": "pass",
+    "empty_normalized_value": "pass",
+    "reject_non_str": "pass",
+    "reject_bool": "pass",
+    "preserve_non_whitespace_characters_and_unicode": "pass",
+    "no_filesystem_network_global_state": "pass"
+  },
+  "metadata": {
+    "model": "qwen3.5:35b",
+    "quantization": "Q4_K_M",
+    "think": false,
+    "temperature": 0,
+    "output_cap": 384,
+    "prompt_tokens": 155,
+    "output_tokens": 69,
+    "finish_reason": "stop",
+    "total_duration_ns": 5677237340,
+    "load_duration_ns": 5026508168,
+    "prompt_eval_duration_ns": 71234646,
+    "eval_duration_ns": 464632279,
+    "wall_elapsed_seconds": 5.68
+  }
+}

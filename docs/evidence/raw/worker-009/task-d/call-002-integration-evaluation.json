@@ -1,0 +1,8 @@
+{
+  "call": 2,
+  "reporting_integration": "pass; retained Qwen artifact integrated in anvil/reporting.py failure-mode rendering",
+  "focused_tests": "pass; 4 tests, 4 subtests",
+  "full_pytest": "pass; 87 tests, 66 subtests",
+  "validation": "pass; ./ops/validate",
+  "result": "GREEN"
+}

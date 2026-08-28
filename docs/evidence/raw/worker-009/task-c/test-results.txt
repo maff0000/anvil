@@ -1,0 +1,4 @@
+focused: python3 -m unittest discover -s tests -p 'test_metrics.py' -v — 12 tests passed
+full: python3 -m unittest discover -s tests -v — 38 tests passed
+validate: ./ops/validate — passed; 38 tests passed
+initial focused invocation: python3 -m unittest tests.test_metrics — failed to import because tests is not a package; corrected with file discovery, no code failure

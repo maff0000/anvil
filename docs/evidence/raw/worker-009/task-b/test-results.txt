@@ -1,0 +1,4 @@
+Focused: PYTHONPATH=. pytest -q tests/test_contracts.py — 24 passed in 0.02s
+Full: PYTHONPATH=. pytest -q — 80 passed, 54 subtests passed in 0.08s
+Validation: ./ops/validate — passed (35 tests)
+No second Qwen call: call 1 passed exact mechanical extraction, compilation, and contract evaluation; campaign allows call 2 only after failure evidence.

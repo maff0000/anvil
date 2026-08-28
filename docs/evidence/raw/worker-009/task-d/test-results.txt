@@ -1,0 +1,6 @@
+focused: python3 -m unittest discover -s tests -p 'test_reporting.py' -v — 4 tests passed after call 2 integration
+full: current campaign tree passed full pytest; final aggregate recorded by Axiom
+validate: ./ops/validate — passed after call 2 integration
+call 1: RED; raw response compile failure and artifact mismatch
+call 2: GREEN; exact fenced extraction, compilation, and complete contract evaluation
+compile: anvil/reporting.py and call-2 retained Qwen artifact compiled successfully
