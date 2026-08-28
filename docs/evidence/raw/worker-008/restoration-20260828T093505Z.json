@@ -1,0 +1,30 @@
+{
+  "restored_at_utc": "2026-08-28T09:35:05Z",
+  "action": "docker start local-ai-vllm",
+  "container": "local-ai-vllm",
+  "container_status": "running",
+  "container_started_at": "2026-08-28T09:33:35.645601991Z",
+  "published_health_url": "http://127.0.0.1:8010/health",
+  "health": "HTTP 200 OK",
+  "models": {
+    "status": "HTTP 200 OK",
+    "expected_model": "NVFP4/Qwen3-30B-A3B-Instruct-2507-FP4",
+    "expected_revision": "585a2c9e794deb856281697ca21a1c5090157b85",
+    "observed_model_id": "NVFP4/Qwen3-30B-A3B-Instruct-2507-FP4"
+  },
+  "gpu": {
+    "process": "VLLM::EngineCore PID 203, 25430 MiB",
+    "gpu": "NVIDIA GeForce RTX 5090",
+    "memory_used_mib": 25472,
+    "memory_total_mib": 32607,
+    "utilization_percent": 0
+  },
+  "litellm": {
+    "root_health": "HTTP 401 Unauthorized without API key; endpoint reachable",
+    "secrets_included": false
+  },
+  "notes": [
+    "The container publishes port 8000 to host port 8010; verification used the published port.",
+    "Production configuration and command were not changed."
+  ]
+}

@@ -53,6 +53,7 @@ def render_outcome_report(outcomes: Sequence["AttemptOutcome"]) -> str:
         "",
         f"- Sample count: {len(ordered_outcomes)}",
         f"- Accepted count: {accepted}",
+        f"- Success rate: {format_success_rate(accepted, len(ordered_outcomes))}",
         f"- Syntax failure count: {syntax_failures}",
         f"- Semantic failure count: {semantic_failures}",
         f"- Timeout/truncation count: {timeouts_or_truncations}",
@@ -76,6 +77,24 @@ def render_outcome_report(outcomes: Sequence["AttemptOutcome"]) -> str:
             f"{outcome.output_tokens} |"
         )
     return "\n".join(lines) + "\n"
+
+
+def format_success_rate(numerator: int, denominator: int) -> str:
+    if isinstance(numerator, bool) or isinstance(denominator, bool):
+        raise ValueError("Bools are invalid inputs")
+    if not isinstance(numerator, int) or not isinstance(denominator, int):
+        raise ValueError("Inputs must be integers")
+    if denominator <= 0:
+        raise ValueError("Denominator must be positive")
+    if numerator < 0 or numerator > denominator:
+        raise ValueError("Numerator must be in [0, denominator]")
+
+    from decimal import Decimal, ROUND_HALF_EVEN
+
+    rate = Decimal(numerator) / Decimal(denominator) * 100
+    rounded_rate = rate.quantize(Decimal('0.1'), rounding=ROUND_HALF_EVEN)
+
+    return f"{rounded_rate}%"
 
 
 def _as_fraction(value: int | float) -> Fraction:

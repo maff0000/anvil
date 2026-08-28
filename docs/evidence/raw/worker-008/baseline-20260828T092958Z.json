@@ -1,0 +1,66 @@
+{
+  "worker_id": "ANVIL-WORKER-008-HYBRID-NATIVE-QWEN-INTEGRATION",
+  "work_item": "WORKER-008-FEATURE-001",
+  "captured_at_utc": "2026-08-28T09:29:58Z",
+  "vllm": {
+    "container": "local-ai-vllm",
+    "identity": {
+      "image": "vllm/vllm-openai:latest",
+      "command": [
+        "serve",
+        "--model",
+        "NVFP4/Qwen3-30B-A3B-Instruct-2507-FP4",
+        "--revision",
+        "585a2c9e794deb856281697ca21a1c5090157b85",
+        "--max-model-len",
+        "32768",
+        "--gpu-memory-utilization",
+        "0.76",
+        "--enable-auto-tool-choice",
+        "--tool-call-parser",
+        "hermes"
+      ],
+      "container_started_at": "2026-08-28T08:32:50.417304737Z",
+      "status": "running"
+    },
+    "health": {
+      "url": "http://127.0.0.1:8000/health",
+      "status": "unreachable",
+      "observed": "curl failed to connect"
+    },
+    "models": {
+      "url": "http://127.0.0.1:8000/v1/models",
+      "status": "unreachable",
+      "observed": "curl failed to connect"
+    }
+  },
+  "gpu_runtime": {
+    "host_nvidia_smi": "failed: couldn't communicate with the NVIDIA driver",
+    "docker_exec_ollama_nvidia_smi": {
+      "gpu": "NVIDIA GeForce RTX 5090",
+      "memory_used_mib": 25472,
+      "memory_total_mib": 32607,
+      "utilization_percent": 0
+    }
+  },
+  "ollama": {
+    "base_url": "http://127.0.0.1:11434",
+    "version": "0.17.7",
+    "qwen_model": "qwen3.5:35b",
+    "qwen_digest": "3460ffeede5453ead027dbd2f821b12ad0aa3de54630971993babdb2165221f7",
+    "qwen_size_bytes": 23869191742,
+    "qwen_format": "gguf",
+    "qwen_quantization": "Q4_K_M",
+    "qwen_parameter_size": "36.0B",
+    "api_ps": "healthy; models=[] at capture"
+  },
+  "litellm": {
+    "url": "http://127.0.0.1:4000/health",
+    "status": "401 Unauthorized; API key not supplied",
+    "secrets_included": false
+  },
+  "notes": [
+    "Baseline captured before stopping local-ai-vllm.",
+    "No credentials or secrets recorded."
+  ]
+}

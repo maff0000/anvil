@@ -16,6 +16,7 @@
 | Native Engineer + bounded local GPU delegation | WORKER-005: two bounded artifacts; second failed corrected exact-rounding case; no integration | LOCAL_GPU_DELEGATION_REJECTED_RUNTIME_UNVERIFIED |
 | Local GPU runtime re-proof | WORKER-006 historical shell view was sandbox-isolated; current container evidence proves NVIDIA runtime, while Ollama Qwen use remains unverified | NVIDIA_RUNTIME_VERIFIED_SANDBOX_ISOLATED / OLLAMA_QWEN_GPU_BACKING_UNVERIFIED |
 | Exclusive Ollama Qwen re-proof | WORKER-007: one exact Qwen3.5 Q4_K_M call passed with 26.8 GB Ollama VRAM residency; production restored | OLLAMA_QWEN_GPU_BACKING_VERIFIED / LOCAL_QWEN_CONTRACT_VIABLE |
+| Native Engineer + verified local Qwen integration | WORKER-008: Qwen artifact passed on attempt 2, was retained without semantic rewrite, integrated into outcome reporting, and production was restored | HYBRID_NATIVE_QWEN_VIABLE |
 
 Raw benchmark corpora remain local under `results/`; ignored output is
 evidence, not application logic.
