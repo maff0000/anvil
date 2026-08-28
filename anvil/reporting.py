@@ -3,6 +3,20 @@ from pathlib import Path
 from statistics import mean, median
 
 
+def escape_markdown_text(value: str) -> str:
+    if not isinstance(value, str):
+        raise ValueError("Expected str")
+
+    # Escape backslashes first to prevent double-escaping
+    value = value.replace("\\", "\\\\")
+
+    # Escape specific markdown characters: *, _, `, [, ], (, ), #
+    for char in ['*', '_', '`', '[', ']', '(', ')', '#']:
+        value = value.replace(char, "\\" + char)
+
+    return value
+
+
 def write_jsonl(path: Path, records: list[dict[str, object]]) -> None:
     path.write_text("".join(json.dumps(record, ensure_ascii=False) + "\n" for record in records), encoding="utf-8")
 
@@ -17,5 +31,5 @@ def write_summary(path: Path, records: list[dict[str, object]], batch_seconds: f
     throughput = sum(outputs) / batch_seconds if batch_seconds and outputs else 0.0
     text = [f"# ANVIL {records[0].get('benchmark', '')} — {mode}", "", f"- Samples: {len(records)}", f"- Pass: {len(passed)} ({len(passed) / len(records) * 100:.1f}%)", f"- Batch wall: {batch_seconds:.3f}s", f"- Wall mean/median: {mean(walls):.3f}s / {median(walls):.3f}s", f"- Output tokens mean/median: {(mean(outputs) if outputs else 0):.1f} / {(median(outputs) if outputs else 0):.1f}", f"- Aggregate output throughput: {throughput:.1f} tokens/s", f"- Syntax failures: {syntax}", f"- Semantic/test failures: {semantic}", f"- Timeout/truncation: {timeouts}", "", "## Failure modes", ""]
     modes = sorted({str(r.get("error")) for r in records if r.get("error")})
-    text.extend(f"- `{item}`" for item in modes or ["none observed"])
+    text.extend(f"- `{escape_markdown_text(item)}`" for item in modes or ["none observed"])
     path.write_text("\n".join(text) + "\n", encoding="utf-8")

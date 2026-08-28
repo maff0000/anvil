@@ -1,0 +1,2 @@
+Captured 2026-08-28T10:36:21Z via: docker exec ollama nvidia-smi
+GPU memory 25946MiB / 32607MiB; /usr/bin/ollama using 25904MiB; no other GPU process.

@@ -1,0 +1,14 @@
+{
+  "call": 2,
+  "raw_artifact_match": "pass; mechanically extracted fenced content equals call-002-artifact.py",
+  "compile": "pass",
+  "contract": {
+    "type_rejection": "pass; None, bool, int, and bytes raise ValueError",
+    "backslash_first": "pass",
+    "markdown_specials": "pass; *, _, backtick, [, ], (, ), # escaped",
+    "other_characters": "pass; newlines and Unicode preserved",
+    "no_html_escape_or_trim": "pass",
+    "deterministic_state_free": "pass by artifact inspection"
+  },
+  "result": "GREEN"
+}

@@ -1,0 +1,1 @@
+{"model":"qwen3.5:35b","quantization":"Q4_K_M","think":false,"temperature":0,"output_cap":384,"done":true,"finish":"stop","total_duration_ns":1241016318,"load_duration_ns":90726980,"prompt_eval_count":135,"prompt_eval_duration_ns":66598037,"eval_count":160,"eval_duration_ns":928301737,"wall_seconds":1.24}

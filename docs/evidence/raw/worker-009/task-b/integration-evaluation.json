@@ -1,0 +1,22 @@
+{
+  "status": "pass",
+  "retained_artifact": "call-001-artifact.py copied exactly into anvil/contracts.py; no semantic rewrite",
+  "cosmetic_edits": ["blank-line formatting only"],
+  "semantic_edits": ["none to helper"],
+  "integration_changes": [
+    "Added Benchmark.sample_count: int | None = None",
+    "load_benchmark parses sample_count only when the optional field is present",
+    "Absent sample_count remains None and existing fields/defaults are preserved",
+    "Added focused helper edge tests and loader integration tests"
+  ],
+  "scope_audit": {
+    "allowed_code_files_changed": ["anvil/contracts.py", "tests/test_contracts.py"],
+    "allowed_evidence_directory": "docs/evidence/raw/worker-009/task-b/",
+    "other_files_changed_by_worker": false,
+    "branch_changes": false,
+    "commits_or_pushes": false,
+    "vllm_changed": false,
+    "provider_scheduler_redis_broker_used": false
+  },
+  "failures": []
+}

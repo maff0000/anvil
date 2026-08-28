@@ -1,0 +1,4 @@
+Focused: PYTHONPATH=. pytest -q tests/test_models.py — 11 passed in 0.01s
+Full: PYTHONPATH=. pytest -q — 56 passed, 54 subtests passed in 0.06s
+Validation: ./ops/validate — passed
+Initial pytest invocations without PYTHONPATH failed at collection with ModuleNotFoundError: No module named 'anvil'; rerun with PYTHONPATH=. passed.

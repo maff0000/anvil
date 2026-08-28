@@ -1,6 +1,25 @@
 import unittest
 
-from anvil.metrics import percentile
+from anvil.metrics import classify_success_rate, percentile
+
+
+class ClassifySuccessRateTests(unittest.TestCase):
+    def test_classifies_none_partial_and_complete(self):
+        self.assertEqual(classify_success_rate(0, 4), "none")
+        self.assertEqual(classify_success_rate(2, 4), "partial")
+        self.assertEqual(classify_success_rate(4, 4), "complete")
+
+    def test_rejects_non_integer_and_boolean_arguments(self):
+        for accepted, samples in ((True, 4), (1, False), (1.0, 4), (1, "4")):
+            with self.subTest(accepted=accepted, samples=samples):
+                with self.assertRaises(ValueError):
+                    classify_success_rate(accepted, samples)
+
+    def test_rejects_invalid_bounds(self):
+        for accepted, samples in ((0, 0), (0, -1), (-1, 4), (5, 4)):
+            with self.subTest(accepted=accepted, samples=samples):
+                with self.assertRaises(ValueError):
+                    classify_success_rate(accepted, samples)
 
 
 class PercentileTests(unittest.TestCase):

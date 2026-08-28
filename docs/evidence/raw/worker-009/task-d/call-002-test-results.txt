@@ -1,0 +1,11 @@
+Focused: python3 -m pytest -q tests/test_reporting.py
+....                                                                 [100%]
+4 passed, 4 subtests passed in 0.01s
+
+Full: python3 -m pytest -q
+................................................ [ 55%]
+.......................................                                                                [100%]
+87 passed, 66 subtests passed in 0.07s
+
+Validation: ./ops/validate
+42 tests in test_evidence_summary, test_harness, test_metrics, test_outcomes, and test_reporting: OK

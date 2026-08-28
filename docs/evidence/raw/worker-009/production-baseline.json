@@ -1,0 +1,22 @@
+{
+  "captured_at_utc": "2026-08-28T09:59:00Z",
+  "vllm": {
+    "container": "local-ai-vllm",
+    "container_id": "aa8ba9ac26ef5a7014aa115015d24b007bff0ee655b735d40643f5df90f69901",
+    "image": "vllm/vllm-openai:latest",
+    "published_health": "http://127.0.0.1:8010/health",
+    "health_http": 200,
+    "model": "NVFP4/Qwen3-30B-A3B-Instruct-2507-FP4",
+    "revision": "585a2c9e794deb856281697ca21a1c5090157b85",
+    "status": "running"
+  },
+  "gpu": {
+    "device": "NVIDIA GeForce RTX 5090",
+    "memory_used_mib": 25472,
+    "memory_total_mib": 32607,
+    "utilization_percent": 0,
+    "process": "vLLM"
+  },
+  "ollama": {"version": "0.17.7", "model": "qwen3.5:35b", "quantization": "Q4_K_M", "health": "GREEN"},
+  "litellm": {"root_health_http": 401, "meaning": "reachable; authentication required", "secrets_included": false}
+}

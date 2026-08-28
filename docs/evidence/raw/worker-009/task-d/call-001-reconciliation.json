@@ -1,0 +1,9 @@
+{
+  "finding": "The raw Qwen response is syntactically invalid and does not equal call-001-artifact.py.",
+  "raw_response_preserved": true,
+  "artifact_preserved": true,
+  "original_evaluation_claim": "pass",
+  "corrected_evaluation": "RED",
+  "reason": "The raw response has an unterminated string literal; the artifact has corrected backslash literals. The artifact therefore cannot be attributed to an accepted Qwen output.",
+  "action": "Use one permitted second Qwen call with this exact mechanical failure evidence."
+}

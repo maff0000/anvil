@@ -3,6 +3,28 @@ from pathlib import Path
 from typing import Any
 
 
+def parse_sample_count(value: str) -> int:
+    if not isinstance(value, str):
+        raise ValueError("Input must be a string")
+
+    if not value:
+        raise ValueError("Input cannot be empty")
+
+    for char in value:
+        if not ('0' <= char <= '9'):
+            raise ValueError("Input must consist only of ASCII decimal digits")
+
+    try:
+        result = int(value)
+    except ValueError:
+        raise ValueError("Invalid integer format")
+
+    if result < 1 or result > 100000:
+        raise ValueError("Value must be between 1 and 100000 inclusive")
+
+    return result
+
+
 @dataclass(frozen=True)
 class Benchmark:
     benchmark_id: str
@@ -12,6 +34,7 @@ class Benchmark:
     output_tokens: int
     timeout_seconds: float
     target_function: str = "slugify"
+    sample_count: int | None = None
 
 
 def load_benchmark(path: str | Path) -> Benchmark:
@@ -41,4 +64,5 @@ def load_benchmark(path: str | Path) -> Benchmark:
         output_tokens=int(data.get("output_tokens", 160)),
         timeout_seconds=float(data.get("timeout_seconds", 60)),
         target_function=str(data.get("target_function", "slugify")),
+        sample_count=(parse_sample_count(data["sample_count"]) if "sample_count" in data else None),
     )

@@ -1,0 +1,11 @@
+{
+  "call_001": "RED",
+  "call_001_attribution": "rejected; raw Qwen content had the recorded SyntaxError and did not equal its separately saved corrected artifact",
+  "call_002": "GREEN",
+  "call_002_attribution": "accepted; exact raw response preserved, extracted artifact compiled and passed the complete contract",
+  "integration": "reporting.py reconciled to the exact retained call-002 artifact",
+  "prior_saved_implementation": "required semantic correction before acceptance; it is not attributed to call-001",
+  "hybrid_success": true,
+  "vllm_restored_by_engineer": false,
+  "final_campaign_restoration": "performed and verified by Axiom after call-002; see ../production-restoration.json"
+}

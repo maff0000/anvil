@@ -1,0 +1,3 @@
+Fri Aug 28 10:09:45 2026
+NVIDIA GeForce RTX 5090, 0 %, 25946 MiB, 32607 MiB
+Process: /usr/bin/ollama, GPU memory 25904 MiB

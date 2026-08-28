@@ -1,0 +1,1 @@
+{"model":"qwen3.5:35b","quantization":"Q4_K_M","think":false,"temperature":0,"output_cap":384,"done":true,"finish":"stop","total_duration_ns":655198947,"load_duration_ns":84826579,"prompt_eval_count":119,"prompt_eval_duration_ns":70357604,"eval_count":73,"eval_duration_ns":423213744,"wall_seconds":0.66,"second_call":"required; call 1 was RED after raw-response reconciliation"}
