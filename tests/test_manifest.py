@@ -80,6 +80,42 @@ def test_writer_is_deterministic_and_has_trailing_newline(tmp_path: Path):
     assert json.loads(first.read_text(encoding="utf-8"))["samples"] == 2
 
 
+def test_integration_manifest_aggregates_existing_result_shape_and_writes_same_manifest(
+    tmp_path: Path,
+):
+    records = [
+        {
+            "syntactic_validity": True,
+            "semantic_pass": True,
+            "wall_seconds": 1.25,
+            "output_tokens": 12,
+        },
+        {
+            "syntactic_validity": False,
+            "semantic_pass": False,
+            "wall_seconds": 2,
+            "output_tokens": 8,
+            "finish_reason": "length",
+        },
+        {
+            "syntactic_validity": True,
+            "semantic_pass": False,
+            "wall_seconds": 3,
+            "output_tokens": 20,
+            "error": "timeout",
+        },
+    ]
+    expected = build_result_manifest(records)
+    first = tmp_path / "first.json"
+    second = tmp_path / "second.json"
+
+    write_result_manifest(first, records)
+    write_result_manifest(second, records)
+
+    assert json.loads(first.read_text(encoding="utf-8")) == expected
+    assert first.read_bytes() == second.read_bytes()
+
+
 def test_invalid_input_preserves_existing_manifest(tmp_path: Path):
     path = tmp_path / "manifest.json"
     write_result_manifest(path, [attempt()])
