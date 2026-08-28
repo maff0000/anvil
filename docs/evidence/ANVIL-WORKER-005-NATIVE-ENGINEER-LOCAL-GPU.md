@@ -16,8 +16,9 @@ existing outcome report:
 
 The contract required strict integer/range validation, `ValueError` for bad
 inputs, exact one-decimal percentage formatting with round-half-even, and no
-state or dependencies. The integrated report would add a deterministic
-success-rate line. The Engineer had only `anvil/outcome_report.py` and
+state or dependencies. Under that contract, `1/80` correctly rounds to
+`1.2%`; `23/80` is a useful tie case that must round to `28.8%`. The integrated
+report would add a deterministic success-rate line. The Engineer had only `anvil/outcome_report.py` and
 `tests/test_outcome_report.py` authorized and retained Git authority with
 Axiom.
 
@@ -60,10 +61,14 @@ def format_success_rate(numerator: int, denominator: int) -> str:
     return f"{result:.1f}%"
 ```
 
-Mechanical testing found `(1, 80) -> 1.2%` instead of the required `1.3%`.
-Both artifacts compiled and were extractable, but both failed semantic
-acceptance. The Engineer did not silently repair either artifact and changed
-no files.
+The Engineer initially compared `(1, 80) -> 1.2%` against an incorrect
+expected `1.3%`. That comparison was invalid under the written round-half-even
+contract. Axiom re-evaluated the exact second artifact after correcting the
+contract: `(1, 80) -> 1.2%` passes, while `(23, 80) -> 28.7%` fails the exact
+required `28.8%` result because of binary float rounding. Thus the second
+artifact still fails the complete contract, but for a corrected, mechanically
+valid reason. Both artifacts compiled and were extractable. The Engineer did
+not silently repair either artifact and changed no files.
 
 Returned Ollama metadata:
 
@@ -103,11 +108,13 @@ was changed.
 
 ## Auditor and classification
 
-Because there was no integrated candidate, the fresh Auditor was asked to
+Because there was no integrated candidate, a fresh Auditor was asked to
 independently verify the delegation evidence and whether rejection was
 warranted. The first Auditor returned `RED` for evidence incompleteness and
-the false diff-check claim. Axiom corrected the document and requested a final
-re-audit without making another GPU call.
+the false diff-check claim. Axiom corrected those issues. A second Auditor then
+returned `RED` because the original evidence used the incorrect `1/80 -> 1.3%`
+expectation. Axiom corrected the contract and re-evaluated the exact artifact;
+the final re-audit follows without another GPU call.
 
 Final classification: **LOCAL_GPU_DELEGATION_REJECTED**
 

@@ -25,7 +25,10 @@ Contract:
 - Raise `ValueError` for invalid values.
 - Return the exact percentage as a string with one decimal place and a trailing
   `%`, using deterministic round-half-even behavior. Examples: `0/3` →
-  `0.0%`, `1/8` → `12.5%`, `1/6` → `16.7%`, `3/3` → `100.0%`.
+  `0.0%`, `1/8` → `12.5%`, `1/6` → `16.7%`, `1/80` → `1.2%`, and
+  `3/3` → `100.0%`.
+- Exact round-half-even behavior must also handle binary-float-sensitive ties;
+  for example `23/80` → `28.8%`.
 - Standard library only; no mutation, filesystem, network, or global state.
 
 The Engineer must mechanically extract, compile, and test the returned
