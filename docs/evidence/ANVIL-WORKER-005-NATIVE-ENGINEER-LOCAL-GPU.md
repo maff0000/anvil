@@ -1,8 +1,8 @@
 # ANVIL-WORKER-005 — Native Engineer + local GPU delegation
 
-Date: 2026-08-28 UTC  
-Branch: `feature/worker-005-native-engineer-local-gpu`  
-Setup commit: `a9733e0`  
+Date: 2026-08-28 UTC
+Branch: `feature/worker-005-native-engineer-local-gpu`
+Setup commit: `a9733e0`
 Substrate: native in-session Codex Engineer using ANVIL's existing Ollama
 inference primitive
 
@@ -72,6 +72,15 @@ Returned Ollama metadata:
 | 1 | `qwen3.5:35b` | `stop` | 173 | 186 |
 | 2 | `qwen3.5:35b` | `stop` | 243 | 157 |
 
+### Raw evidence limitation
+
+The Engineer returned the exact second extracted artifact and a failure
+description for the first artifact, plus Ollama metadata, but did not persist
+the raw JSON request/response bodies to a file before the child session ended.
+Those bodies are therefore unavailable for later reconstruction. This is an
+evidence-preservation failure and is reported explicitly; it is not treated as
+proof that the missing first response had any particular unseen content.
+
 The Engineer reported `nvidia-smi` could not communicate with the NVIDIA
 driver. GPU acceleration was therefore not independently proven during this
 run; this is recorded as an operational limitation rather than inferred away.
@@ -86,7 +95,9 @@ was changed.
 
 - Focused/full baseline: 44 pytest tests passed
 - `./ops/validate`: passed (35 tests)
-- `git diff --check`: passed
+- baseline `git diff --check`: passed before evidence documentation was added;
+  the initial evidence commit itself contained trailing Markdown whitespace,
+  corrected in the follow-up evidence commit
 - Files changed by Engineer: none
 - GPU-generated code retained: none
 
@@ -94,7 +105,9 @@ was changed.
 
 Because there was no integrated candidate, the fresh Auditor was asked to
 independently verify the delegation evidence and whether rejection was
-warranted. Its ruling is recorded below after execution.
+warranted. The first Auditor returned `RED` for evidence incompleteness and
+the false diff-check claim. Axiom corrected the document and requested a final
+re-audit without making another GPU call.
 
 Final classification: **LOCAL_GPU_DELEGATION_REJECTED**
 
