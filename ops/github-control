@@ -21,7 +21,7 @@ parser.add_argument("--state", default="/tmp/anvil-github-control-issue-1.json")
 parser.add_argument("--interval", type=float, default=30.0)
 parser.add_argument("--once", action="store_true")
 parser.add_argument("--baseline", action="store_true", help="record the current latest comment without invoking a resume")
-parser.add_argument("--resume-command", help="argv string; message metadata is supplied through ANVIL_GITHUB_* environment variables")
+parser.add_argument("--launch-command", default="/usr/local/bin/axel -C /srv/codex/anvil exec --ephemeral --sandbox read-only -", help="argv string for a fresh stateless PL invocation; bootstrap is passed on stdin")
 args = parser.parse_args()
 
 
@@ -70,23 +70,33 @@ def poll_once():
     if not messages:
         log("idle", last_comment_id=state.get("last_comment_id", 0))
         return 0
-    if not args.resume_command:
-        log("blocked", error_code="RESUME_HOOK_UNCONFIGURED", message="new CGPT message found but no safe resume command was configured", comment_id=messages[0].comment_id)
-        return 3
-    command = shlex.split(args.resume_command)
+    command = shlex.split(args.launch_command)
     if not command:
         log("blocked", error_code="RESUME_HOOK_EMPTY", message="resume command parsed empty", comment_id=messages[0].comment_id)
         return 3
     for message in messages:
         environment = os.environ.copy()
         environment.update({"ANVIL_GITHUB_COMMENT_ID": str(message.comment_id), "ANVIL_GITHUB_MESSAGE": message.body, "ANVIL_GITHUB_REPO": args.repo, "ANVIL_GITHUB_ISSUE": str(args.issue)})
-        log("resume_start", comment_id=message.comment_id, command=command[0])
-        result = subprocess.run(command, env=environment)
+        bootstrap = f"""You are a fresh, disposable Axiom PL invocation for ANVIL. Do not rely on prior session memory. Reconstruct truth only from durable state.
+
+Read /srv/codex/anvil/README.md, docs/OPERATING-MODEL.md, docs/GITHUB-COMMS.md, docs/CAPABILITY-MATRIX.md, current Git branch and HEAD, the current open PR, and the latest messages on GitHub issue #{args.issue} in repository {args.repo}. Identify the exact pending CGPT_* ruling below.
+
+Pending CGPT message:
+{message.body}
+
+Perform one small deterministic action proving correct rehydration: verify the current branch/HEAD and that the ruling selects no capability expansion. Then post exactly one concise AXIOM_CHECKPOINT comment to issue #{args.issue} using gh, including UTC, current SHA, consumed CGPT comment ID: {message.comment_id}, the ruling, the deterministic action, and resulting state. Do not edit files, run benchmarks, change production, or post any other comment. Return a concise result.
+"""
+        log("fresh_start", comment_id=message.comment_id, command=command[0])
+        result = subprocess.run(command, env=environment, input=bootstrap, text=True, capture_output=True)
         if result.returncode:
-            log("resume_failed", error_code="RESUME_COMMAND_FAILED", comment_id=message.comment_id, returncode=result.returncode)
+            log("fresh_failed", error_code="FRESH_INVOCATION_FAILED", comment_id=message.comment_id, returncode=result.returncode, stderr_tail=result.stderr[-500:])
             return result.returncode or 4
+        checkpoints = [item for item in fetch() if int(item["id"]) > int(state.get("last_comment_id", 0)) and str(item.get("body", "")).startswith("AXIOM_CHECKPOINT") and f"Consumed CGPT comment ID: {message.comment_id}" in str(item.get("body", ""))]
+        if not checkpoints:
+            log("fresh_failed", error_code="CHECKPOINT_NOT_CONFIRMED", message="fresh PL exited successfully but did not post the required checkpoint", comment_id=message.comment_id)
+            return 6
         write_state(message.comment_id)
-        log("resume_complete", comment_id=message.comment_id)
+        log("fresh_complete", comment_id=message.comment_id, checkpoint_id=int(checkpoints[-1]["id"]))
     return 0
 
 
