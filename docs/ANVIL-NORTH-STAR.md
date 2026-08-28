@@ -46,6 +46,12 @@ ANVIL is built only around empirically proven capabilities. Every mechanism
 must solve an observed problem. Existing platform capabilities and standard
 tools are preferred over custom machinery.
 
+For user-facing work, technical correctness alone does not imply product
+acceptance. Human/CGPT may issue a `PRODUCT RED` finding against a technically
+GREEN implementation, returning it to the bounded repair loop. User-facing
+PIDs should declare a presentation target where relevant, such as
+`FUNCTIONAL_ONLY`, `PRODUCT_USABLE`, or `PRESENTATION_POLISHED`.
+
 Already demonstrated capabilities include native Engineer and Auditor
 subagents, standard Git clone isolation, GitHub delivery, bounded local-Qwen
 coding, and ordinary Python virtual environments. ANVIL must not hide weak
