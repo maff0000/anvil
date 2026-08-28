@@ -2,7 +2,7 @@
 
 Date: 2026-08-28 UTC
 Branch: `feature/worker-007-exclusive-gpu-qwen-reproof`
-Final commit: pending evidence commit
+Final commit: pending final audit record
 
 ## Corrected prior-state interpretation
 
@@ -131,6 +131,18 @@ the mechanical result, and production restoration. It returned:
 - `capability_classification_supported: yes`;
 - `production_restored: yes`;
 - confidence: high.
+
+The Auditor returned the required structured verdict:
+
+```text
+AUDIT_VERDICT: GREEN
+gpu_backing_verified: yes
+contract_comparable: yes
+capability_classification_supported: yes
+production_restored: yes
+findings: none
+confidence: high
+```
 
 ## Final classification
 
