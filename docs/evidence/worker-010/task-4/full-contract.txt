@@ -1,0 +1,6 @@
+Command: focused parser contract execution
+Valid cases: PASS — 0/1, 3/3, 03/10, 100000/100000
+Invalid cases: PASS — whitespace, missing/extra slash, zero denominator,
+  numerator greater than denominator, counts above 100000, Arabic-Indic and
+  fullwidth Unicode digits
+Result: PASS

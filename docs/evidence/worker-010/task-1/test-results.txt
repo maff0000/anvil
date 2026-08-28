@@ -1,0 +1,14 @@
+Focused command:
+  python3 -m pytest tests/test_models.py -q
+Result:
+  30 passed in 0.02s
+
+Full command:
+  python3 -m pytest -q
+Result:
+  106 passed, 66 subtests passed in 0.09s
+
+Validation command:
+  ./ops/validate
+Result:
+  unittest suite passed (42 tests); compileall passed.

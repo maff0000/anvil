@@ -1,0 +1,8 @@
+{
+  "model": "qwen3.5:35b",
+  "messages": [{"role": "user", "content": "Generate only Python code for parse_passed_total(value: str) -> tuple[int, int]. Accept exactly ASCII decimal digits, one slash, ASCII decimal digits, no surrounding whitespace; denominator positive; numerator in [0, denominator]; both counts <=100000; otherwise ValueError. Standard library only, no FS/network/global state."}],
+  "think": false,
+  "temperature": 0,
+  "stream": false,
+  "options": {"num_predict": 384}
+}

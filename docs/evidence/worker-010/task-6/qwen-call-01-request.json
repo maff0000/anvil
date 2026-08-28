@@ -1,0 +1,8 @@
+{
+  "model": "qwen3.5:35b",
+  "messages": [{"role": "user", "content": "Generate only Python code for format_failure_rate(failures: int, samples: int) -> str. Both args must be int and not bool; samples positive; failures in [0,samples]; invalid inputs raise ValueError. Return exact one-decimal percentage with % using deterministic round-half-even. Examples: (0,4)->\"0.0%\", (1,8)->\"12.5%\", (4,4)->\"100.0%\". Standard library only; no filesystem/network/global state. Return only Python artifact."}],
+  "think": false,
+  "temperature": 0,
+  "stream": false,
+  "options": {"num_predict": 384}
+}

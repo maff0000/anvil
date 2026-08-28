@@ -26,3 +26,33 @@ def test_runtime_config_normalizes_environment_model(monkeypatch):
     monkeypatch.setenv("ANVIL_MODEL", "  NVFP4 / Qwen  30B  ")
 
     assert RuntimeConfig.from_environment().model == "NVFP4 / Qwen 30B"
+
+
+@pytest.mark.parametrize("setting", ["ANVIL_SAMPLES", "ANVIL_CONCURRENCY"])
+@pytest.mark.parametrize("value", ["0", "-1", "not-an-integer"])
+def test_runtime_config_rejects_invalid_environment_counts(monkeypatch, setting, value):
+    monkeypatch.setenv(setting, value)
+
+    with pytest.raises(ValueError, match="positive integer"):
+        RuntimeConfig.from_environment()
+
+
+@pytest.mark.parametrize("field", ["samples", "concurrency"])
+@pytest.mark.parametrize("value", [True, False, 1.0, "4", 0, -2])
+def test_runtime_config_rejects_non_positive_integer_counts(field, value):
+    with pytest.raises(ValueError, match="positive integer"):
+        RuntimeConfig(**{field: value})
+
+
+def test_runtime_config_preserves_valid_values_and_routing(monkeypatch):
+    monkeypatch.setenv("ANVIL_ENDPOINT", "http://example.test/v1")
+    monkeypatch.setenv("ANVIL_MODEL", "NVFP4/Qwen3-30B-A3B-Instruct-2507-FP4")
+    monkeypatch.setenv("ANVIL_SAMPLES", "3")
+    monkeypatch.setenv("ANVIL_CONCURRENCY", "2")
+
+    config = RuntimeConfig.from_environment()
+
+    assert config.samples == 3
+    assert config.concurrency == 2
+    assert config.endpoint == "http://example.test/v1"
+    assert config.model == "NVFP4/Qwen3-30B-A3B-Instruct-2507-FP4"

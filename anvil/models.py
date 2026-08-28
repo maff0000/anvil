@@ -2,6 +2,25 @@ from dataclasses import dataclass
 import os
 
 
+def _validate_positive_int(name: str, value: object) -> int:
+    if isinstance(value, bool) or not isinstance(value, int):
+        raise ValueError(f"{name} must be a positive integer")
+    if value <= 0:
+        raise ValueError(f"{name} must be a positive integer")
+    return value
+
+
+def _environment_positive_int(name: str, default: int) -> int:
+    raw = os.getenv(name)
+    if raw is None:
+        return default
+    try:
+        value = int(raw)
+    except (TypeError, ValueError):
+        raise ValueError(f"{name} must be a positive integer") from None
+    return _validate_positive_int(name, value)
+
+
 def normalize_model_identifier(value: str) -> str:
     if not isinstance(value, str):
         raise ValueError("Input must be a string")
@@ -27,6 +46,10 @@ class RuntimeConfig:
     think: bool | None = None
     protocol: str = "openai"
 
+    def __post_init__(self) -> None:
+        _validate_positive_int("concurrency", self.concurrency)
+        _validate_positive_int("samples", self.samples)
+
     @classmethod
     def from_environment(cls) -> "RuntimeConfig":
         think = os.getenv("ANVIL_THINK")
@@ -36,8 +59,8 @@ class RuntimeConfig:
             timeout_seconds=float(os.getenv("ANVIL_TIMEOUT", cls.timeout_seconds)),
             output_tokens=int(os.getenv("ANVIL_OUTPUT_TOKENS", cls.output_tokens)),
             temperature=float(os.getenv("ANVIL_TEMPERATURE", cls.temperature)),
-            concurrency=int(os.getenv("ANVIL_CONCURRENCY", cls.concurrency)),
-            samples=int(os.getenv("ANVIL_SAMPLES", cls.samples)),
+            concurrency=_environment_positive_int("ANVIL_CONCURRENCY", cls.concurrency),
+            samples=_environment_positive_int("ANVIL_SAMPLES", cls.samples),
             api_key=os.getenv("ANVIL_API_KEY"),
             think=None if think is None else think.lower() in {"1", "true", "yes", "on"},
             protocol=os.getenv("ANVIL_PROTOCOL", "openai"),

@@ -1,0 +1,24 @@
+# Final validation
+
+## Compile
+
+Command: `python3 -m compileall -q anvil tests`
+
+Result: PASS, exit status `0`.
+
+## Focused contract tests
+
+Command: `python3 -m unittest discover -s tests -p 'test_metrics.py' -v && python3 -m unittest discover -s tests -p 'test_evidence_summary.py' -v`
+
+Result: PASS, exit status `0`; 12 metrics tests and 15 evidence-summary
+tests ran, 27 total, all `ok`.
+
+## Full contract validation
+
+Command: `./ops/validate`
+
+Result: PASS, exit status `0`; 46 tests ran, all `ok`.
+
+The earlier invalid focused invocation and its exact failure are preserved in
+`compile-focused-result.txt`; it caused the one permitted Qwen retry and did
+not represent an implementation failure.

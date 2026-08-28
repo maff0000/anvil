@@ -1,0 +1,6 @@
+Preflight `curl -sS http://127.0.0.1:11434/api/ps`:
+{"models":[{"name":"qwen3.5:35b","model":"qwen3.5:35b","quantization_level":"Q4_K_M","size_vram":26824995456}]}
+
+Preflight `docker exec ollama nvidia-smi`: NVIDIA GeForce RTX 5090; Ollama PID 1059970 using 25904 MiB.
+
+Published vLLM port 8010 probe: connection refused (vLLM intentionally stopped); no vLLM lifecycle command was run.

@@ -1,0 +1,9 @@
+Focused: python3 -m pytest -q tests/test_reporting.py
+........ [100%]
+8 passed, 4 subtests passed in 0.01s
+
+Full and validation: python3 -m pytest -q && ./ops/validate
+117 passed, 85 subtests passed in 0.09s
+./ops/validate: passed; 53 unittest cases, OK
+
+Additional check: git diff --check — passed.
