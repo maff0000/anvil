@@ -1,0 +1,32 @@
+{
+  "attempt": 1,
+  "captured_at_utc": "2026-08-28T09:30:56Z",
+  "request_path": "qwen-attempt-001-request.json",
+  "raw_response_body": "{\"model\":\"qwen3.5:35b\",\"created_at\":\"2026-08-28T09:30:56.887703658Z\",\"message\":{\"role\":\"assistant\",\"content\":\"```python\\nfrom decimal import Decimal, ROUND_HALF_EVEN\\n\\ndef format_success_rate(numerator: int, denominator: int) -> str:\\n    if not isinstance(denominator, int) or isinstance(denominator, bool):\\n        raise ValueError(\\\"denominator must be a positive int\\\")\\n    if denominator \\u003c= 0:\\n        raise ValueError(\\\"denominator must be a positive int\\\")\\n    \\n    if not isinstance(numerator, int) or isinstance(numerator, bool):\\n        raise ValueError(\\\"numerator must be an int\\\")\\n    if numerator \\u003c 0 or numerator \\u003e denominator:\\n        raise ValueError(\\\"numerator must be in [0, denominator]\\\")\\n\\n    result = Decimal(numerator) / Decimal(denominator)\\n    rounded = result.quantize(Decimal('0.1'), rounding=ROUND_HALF_EVEN)\\n    return f\\\"{rounded}%\\\"\\n```\"},\"done\":true,\"done_reason\":\"stop\",\"total_duration\":6610098130,\"load_duration\":5027426376,\"prompt_eval_count\":195,\"prompt_eval_duration\":82045713,\"eval_count\":185,\"eval_duration\":1270097891}",
+  "parsed_model_metadata": {
+    "model": "qwen3.5:35b",
+    "done": true,
+    "done_reason": "stop",
+    "prompt_eval_count": 195,
+    "eval_count": 185,
+    "total_duration_ns": 6610098130,
+    "load_duration_ns": 5027426376,
+    "duration_ms": 6615
+  },
+  "extracted_artifact": "from decimal import Decimal, ROUND_HALF_EVEN\n\ndef format_success_rate(numerator: int, denominator: int) -> str:\n    if not isinstance(denominator, int) or isinstance(denominator, bool):\n        raise ValueError(\"denominator must be a positive int\")\n    if denominator <= 0:\n        raise ValueError(\"denominator must be a positive int\")\n    \n    if not isinstance(numerator, int) or isinstance(numerator, bool):\n        raise ValueError(\"numerator must be an int\")\n    if numerator < 0 or numerator > denominator:\n        raise ValueError(\"numerator must be in [0, denominator]\")\n\n    result = Decimal(numerator) / Decimal(denominator)\n    rounded = result.quantize(Decimal('0.1'), rounding=ROUND_HALF_EVEN)\n    return f\"{rounded}%\"\n",
+  "ast_extraction": "PASS; exactly one format_success_rate function; only decimal imports retained for evaluation",
+  "compile": "PASS",
+  "contract_status": "RED",
+  "contract_failure_details": [
+    {"args": [1, 8], "expected": "12.5%", "actual": "0.1%"},
+    {"args": [1, 6], "expected": "16.7%", "actual": "0.2%"},
+    {"args": [1, 80], "expected": "1.2%", "actual": "0.0%"},
+    {"args": [23, 80], "expected": "28.8%", "actual": "0.3%"},
+    {"args": [3, 3], "expected": "100.0%", "actual": "1.0%"},
+    {"args": [1, 16], "expected": "6.2%", "actual": "0.1%"},
+    {"args": [3, 16], "expected": "18.8%", "actual": "0.2%"}
+  ],
+  "validation_cases": "10/10 invalid-input cases raised ValueError",
+  "api_ps": {"models": [{"name": "qwen3.5:35b", "digest": "3460ffeede5453ead027dbd2f821b12ad0aa3de54630971993babdb2165221f7", "size_vram": 26824995456, "quantization_level": "Q4_K_M"}]},
+  "nvidia_smi": {"gpu": "NVIDIA GeForce RTX 5090", "memory_used_mib": 25946, "memory_total_mib": 32607, "utilization_percent": 17, "process": "ollama PID 1056645, 25904 MiB"}
+}

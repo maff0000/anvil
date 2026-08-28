@@ -1,0 +1,16 @@
+{
+  "model": "qwen3.5:35b",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Generate only:\nformat_success_rate(numerator: int, denominator: int) -> str\n\nContract:\n- denominator must be a positive int and bool is invalid;\n- numerator must be an int in [0, denominator] and bool is invalid;\n- invalid values raise ValueError;\n- output exact percentage with one decimal place plus %;\n- deterministic round-half-even;\n- 0/3 -> 0.0%;\n- 1/8 -> 12.5%;\n- 1/6 -> 16.7%;\n- 1/80 -> 1.2%;\n- 23/80 -> 28.8%;\n- 3/3 -> 100.0%;\n- standard library only;\n- no filesystem/network/global state.\nReturn only the Python artifact, with no explanation."
+    }
+  ],
+  "think": false,
+  "stream": false,
+  "options": {
+    "temperature": 0,
+    "num_predict": 256
+  },
+  "keep_alive": "5m"
+}

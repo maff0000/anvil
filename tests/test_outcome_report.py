@@ -1,4 +1,4 @@
-from anvil.outcome_report import render_outcome_report
+from anvil.outcome_report import format_success_rate, render_outcome_report
 from anvil.outcomes import AttemptOutcome
 
 
@@ -32,6 +32,7 @@ def test_render_mixed_outcomes_and_summary() -> None:
 
     assert "- Sample count: 4" in report
     assert "- Accepted count: 2" in report
+    assert "- Success rate: 50.0%" in report
     assert "- Syntax failure count: 1" in report
     assert "- Semantic failure count: 1" in report
     assert "- Timeout/truncation count: 2" in report
@@ -60,6 +61,15 @@ def test_render_rejects_empty_input() -> None:
         assert str(error) == "outcomes must be non-empty"
     else:
         raise AssertionError("expected ValueError")
+
+
+def test_format_success_rate_contract_examples() -> None:
+    assert format_success_rate(0, 3) == "0.0%"
+    assert format_success_rate(1, 8) == "12.5%"
+    assert format_success_rate(1, 6) == "16.7%"
+    assert format_success_rate(1, 80) == "1.2%"
+    assert format_success_rate(23, 80) == "28.8%"
+    assert format_success_rate(3, 3) == "100.0%"
 
 
 def test_render_does_not_mutate_input() -> None:

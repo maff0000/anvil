@@ -1,0 +1,24 @@
+{
+  "attempt": 2,
+  "captured_at_utc": "2026-08-28T09:32:38Z",
+  "request_path": "qwen-attempt-002-request.json",
+  "raw_response_body": "{\"model\":\"qwen3.5:35b\",\"created_at\":\"2026-08-28T09:32:38.552618627Z\",\"message\":{\"role\":\"assistant\",\"content\":\"def format_success_rate(numerator: int, denominator: int) -> str:\\n    if isinstance(numerator, bool) or isinstance(denominator, bool):\\n        raise ValueError(\\\"Bools are invalid inputs\\\")\\n    if not isinstance(numerator, int) or not isinstance(denominator, int):\\n        raise ValueError(\\\"Inputs must be integers\\\")\\n    if denominator \\u003c= 0:\\n        raise ValueError(\\\"Denominator must be positive\\\")\\n    if numerator \\u003c 0 or numerator \\u003e denominator:\\n        raise ValueError(\\\"Numerator must be in [0, denominator]\\\")\\n\\n    from decimal import Decimal, ROUND_HALF_EVEN\\n    \\n    rate = Decimal(numerator) / Decimal(denominator) * 100\\n    rounded_rate = rate.quantize(Decimal('0.1'), rounding=ROUND_HALF_EVEN)\\n    \\n    return f\\\"{rounded_rate}%\\\"\"},\"done\":true,\"done_reason\":\"stop\",\"total_duration\":1440184195,\"load_duration\":102604527,\"prompt_eval_count\":368,\"prompt_eval_duration\":103673053,\"eval_count\":182,\"eval_duration\":1054618546}",
+  "parsed_model_metadata": {
+    "model": "qwen3.5:35b",
+    "done": true,
+    "done_reason": "stop",
+    "prompt_eval_count": 368,
+    "eval_count": 182,
+    "total_duration_ns": 1440184195,
+    "load_duration_ns": 102604527,
+    "duration_ms": 1445
+  },
+  "extracted_artifact": "def format_success_rate(numerator: int, denominator: int) -> str:\n    if isinstance(numerator, bool) or isinstance(denominator, bool):\n        raise ValueError(\"Bools are invalid inputs\")\n    if not isinstance(numerator, int) or not isinstance(denominator, int):\n        raise ValueError(\"Inputs must be integers\")\n    if denominator <= 0:\n        raise ValueError(\"Denominator must be positive\")\n    if numerator < 0 or numerator > denominator:\n        raise ValueError(\"Numerator must be in [0, denominator]\")\n\n    from decimal import Decimal, ROUND_HALF_EVEN\n    \n    rate = Decimal(numerator) / Decimal(denominator) * 100\n    rounded_rate = rate.quantize(Decimal('0.1'), rounding=ROUND_HALF_EVEN)\n    \n    return f\"{rounded_rate}%\"\n",
+  "ast_extraction": "PASS; exactly one requested function; only local decimal import",
+  "compile": "PASS",
+  "contract_status": "GREEN",
+  "contract_results": "8/8 output examples including two half-even ties passed exactly",
+  "validation_cases": "10/10 invalid-input cases raised ValueError",
+  "api_ps": {"models": [{"name": "qwen3.5:35b", "digest": "3460ffeede5453ead027dbd2f821b12ad0aa3de54630971993babdb2165221f7", "size_vram": 26824995456, "quantization_level": "Q4_K_M"}]},
+  "nvidia_smi": {"gpu": "NVIDIA GeForce RTX 5090", "memory_used_mib": 25946, "memory_total_mib": 32607, "utilization_percent": 0, "process": "ollama PID 1056645, 25904 MiB"}
+}
