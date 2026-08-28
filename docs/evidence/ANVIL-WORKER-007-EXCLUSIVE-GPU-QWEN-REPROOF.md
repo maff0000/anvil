@@ -2,7 +2,7 @@
 
 Date: 2026-08-28 UTC
 Branch: `feature/worker-007-exclusive-gpu-qwen-reproof`
-Final commit: pending final audit record
+Final commit: `828538ed4a06ff4cfd5986dddddcdfbb24e49c06`
 
 ## Corrected prior-state interpretation
 
