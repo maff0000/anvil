@@ -17,5 +17,5 @@ invokes an explicitly configured argv resume hook. It uses `gh api` rather
 than a custom messaging service, never evaluates a shell command, and exits
 nonzero without advancing state when polling or resumption fails.
 
-The default configured hook is `/usr/local/bin/axel exec resume --last -`; the
+The default configured hook is `/usr/local/bin/axel -C /srv/codex/anvil exec resume --last -`; the
 detected CGPT message is supplied as the resumed session prompt on stdin.

@@ -21,7 +21,7 @@ parser.add_argument("--state", default="/tmp/anvil-github-control-issue-1.json")
 parser.add_argument("--interval", type=float, default=30.0)
 parser.add_argument("--once", action="store_true")
 parser.add_argument("--baseline", action="store_true", help="record the current latest comment without invoking a resume")
-parser.add_argument("--resume-command", default="/usr/local/bin/axel exec resume --last -", help="argv string; the CGPT message is passed to the resumed process on stdin")
+parser.add_argument("--resume-command", default="/usr/local/bin/axel -C /srv/codex/anvil exec resume --last -", help="argv string; the CGPT message is passed to the resumed process on stdin")
 args = parser.parse_args()
 
 
