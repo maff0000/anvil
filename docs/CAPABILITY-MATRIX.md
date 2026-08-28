@@ -13,7 +13,8 @@
 | External fresh Codex worker process | WORKER-001: managed in-process app-server initialization failed with read-only runtime state | REJECTED_CURRENT_RUNTIME |
 | Native in-session Codex subagent | WORKER-002: one bounded Engineer → PL reconciliation → fresh Auditor cycle completed GREEN | NATIVE_SUBAGENT_VIABLE |
 | Native multi-Engineer decomposition/integration | WORKER-004: two scoped Engineers, two bounded repairs, fresh final Auditor GREEN | NATIVE_MULTI_ENGINEER_VIABLE |
-| Native Engineer + bounded local GPU delegation | WORKER-005: two bounded artifacts; second failed corrected exact-rounding case; no integration | LOCAL_GPU_DELEGATION_REJECTED |
+| Native Engineer + bounded local GPU delegation | WORKER-005: two bounded artifacts; second failed corrected exact-rounding case; no integration | LOCAL_GPU_DELEGATION_REJECTED_RUNTIME_UNVERIFIED |
+| Local GPU runtime re-proof | WORKER-006: NVIDIA driver/device nodes unavailable; no controlled inference made | LOCAL_GPU_RUNTIME_BLOCKED |
 
 Raw benchmark corpora remain local under `results/`; ignored output is
 evidence, not application logic.
