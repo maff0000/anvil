@@ -1,0 +1,44 @@
+{
+  "attempt": 1,
+  "request_payload": {
+    "model": "qwen3.5:35b",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Implement exactly this Python function and return only the function, with no Markdown or explanation:\n\ndef format_success_rate(numerator: int, denominator: int) -> str:\n    ...\n\nContract:\n- denominator must be a positive int; bool is invalid.\n- numerator must be an int in [0, denominator]; bool is invalid.\n- invalid values raise ValueError.\n- output the exact percentage as a string with one decimal place and a trailing %, using deterministic round-half-even behavior.\n- 0/3 -> 0.0%\n- 1/8 -> 12.5%\n- 1/6 -> 16.7%\n- 1/80 -> 1.2%\n- 23/80 -> 28.8%\n- 3/3 -> 100.0%\n- standard library only; no filesystem, network, or global state."
+      }
+    ],
+    "stream": false,
+    "options": {"temperature": 0.0, "num_predict": 256},
+    "think": false
+  },
+  "transport": "native Ollama /api/chat",
+  "raw_response_body": "{\"model\":\"qwen3.5:35b\",\"created_at\":\"2026-08-28T08:31:17.637343866Z\",\"message\":{\"role\":\"assistant\",\"content\":\"def format_success_rate(numerator: int, denominator: int) -> str:\\n    if isinstance(numerator, bool) or isinstance(denominator, bool):\\n        raise ValueError(\\\"Bools are not valid integers for this operation.\\\")\\n    if not isinstance(numerator, int) or not isinstance(denominator, int):\\n        raise ValueError(\\\"numerator and denominator must be integers.\\\")\\n    if denominator <= 0:\\n        raise ValueError(\\\"denominator must be a positive integer.\\\")\\n    if numerator < 0 or numerator > denominator:\\n        raise ValueError(\\\"numerator must be in [0, denominator].\\\")\\n\\n    from decimal import Decimal, ROUND_HALF_EVEN\\n    \\n    rate = Decimal(numerator) / Decimal(denominator) * 100\\n    formatted = rate.quantize(Decimal('0.1'), rounding=ROUND_HALF_EVEN)\\n    \\n    return f\\\"{formatted}%\\\"\"},\"done\":true,\"done_reason\":\"stop\",\"total_duration\":6091976776,\"load_duration\":4514972894,\"prompt_eval_count\":208,\"prompt_eval_duration\":78961462,\"eval_count\":190,\"eval_duration\":1266874023}",
+  "returned_model": "qwen3.5:35b",
+  "finish_reason": "stop",
+  "prompt_tokens": 208,
+  "output_tokens": 190,
+  "duration_seconds": 6.093045234680176,
+  "api_ps_before": {"models": []},
+  "api_ps_after": {
+    "models": [{
+      "name": "qwen3.5:35b",
+      "model": "qwen3.5:35b",
+      "size": 26824995456,
+      "digest": "3460ffeede5453ead027dbd2f821b12ad0aa3de54630971993babdb2165221f7",
+      "details": {"format": "gguf", "family": "qwen35moe", "parameter_size": "36.0B", "quantization_level": "Q4_K_M"},
+      "size_vram": 26824995456,
+      "context_length": 32768
+    }]
+  },
+  "extracted_artifact": "def format_success_rate(numerator: int, denominator: int) -> str:\n    if isinstance(numerator, bool) or isinstance(denominator, bool):\n        raise ValueError(\"Bools are not valid integers for this operation.\")\n    if not isinstance(numerator, int) or not isinstance(denominator, int):\n        raise ValueError(\"numerator and denominator must be integers.\")\n    if denominator <= 0:\n        raise ValueError(\"denominator must be a positive integer.\")\n    if numerator < 0 or numerator > denominator:\n        raise ValueError(\"numerator must be in [0, denominator].\")\n\n    from decimal import Decimal, ROUND_HALF_EVEN\n\n    rate = Decimal(numerator) / Decimal(denominator) * 100\n    formatted = rate.quantize(Decimal('0.1'), rounding=ROUND_HALF_EVEN)\n\n    return f\"{formatted}%\"",
+  "initial_harness_note": "The first evaluator invocation had an implementation error calling tree.walk; this was corrected offline without another inference.",
+  "mechanical_result_after_correction": {
+    "syntactic_validity": true,
+    "semantic_pass": true,
+    "examples": {"0/3": "0.0%", "1/8": "12.5%", "1/6": "16.7%", "1/80": "1.2%", "23/80": "28.8%", "3/3": "100.0%"},
+    "invalid_inputs": "all specified invalid cases raised ValueError",
+    "stdlib_import": "decimal accepted; no filesystem/network/global state observed"
+  },
+  "nvidia_smi_observation": "RTX 5090, 580.159.03; 34 MiB before, 25946 MiB after; /usr/bin/ollama used 25904 MiB"
+}
