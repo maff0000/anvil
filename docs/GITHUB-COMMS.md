@@ -13,6 +13,7 @@ activity is never posted.
 
 `ops/github-control` is the minimal operational poller. It stores only the
 last consumed comment ID in ephemeral state, filters `CGPT_*` comments, and
-invokes an explicitly configured argv resume hook. It uses `gh api` rather
-than a custom messaging service, never evaluates a shell command, and exits
-nonzero without advancing state when polling or resumption fails.
+invokes an explicitly configured argv fresh-invocation hook. It uses `gh api`
+rather than a custom messaging service, never evaluates a shell command, and
+exits nonzero without advancing state when polling, invocation, or checkpoint
+confirmation fails.
