@@ -1,8 +1,8 @@
 # ANVIL-WORKER-006 — Local runtime re-proof
 
-Date: 2026-08-28 UTC  
-Branch: `feature/worker-006-local-runtime-reproof`  
-Parent evidence: WORKER-005 at `170c6c7`  
+Date: 2026-08-28 UTC
+Branch: `feature/worker-006-local-runtime-reproof`
+Parent evidence: WORKER-005 at `170c6c7`
 Runtime: native Ollama, expected model `qwen3.5:35b` Q4_K_M
 
 ## Purpose and control
@@ -29,7 +29,7 @@ Read-only checks on the clean WORKER-006 branch produced:
 - no driver version, GPU model, VRAM state, or positive GPU process/residency
   evidence was available.
 
-GPU_BACKING: **UNVERIFIED**  
+GPU_BACKING: **UNVERIFIED**
 Runtime classification: **LOCAL_GPU_RUNTIME_BLOCKED**
 
 The model artifact is available to Ollama, but the NVIDIA runtime/device
@@ -76,11 +76,14 @@ remain green: 44 pytest tests, 35 `./ops/validate` tests, and
 
 ## Independent Auditor
 
-A fresh native Auditor reviewed the runtime evidence, corrected contract
-interpretation, and comparison. It returned `GREEN` with high confidence for
-the accuracy of this blocked/unverified classification. It confirmed that no
-inference should be inferred from the available evidence and that no invasive
-runtime repair or new governance machinery is justified.
+A fresh native Auditor reviewed the runtime evidence and comparison. Its first
+review returned `RED` solely because the evidence commit contained trailing
+Markdown whitespace despite claiming a clean diff. Axiom corrected that
+administrative defect and performed the required final checks. The runtime
+block, unchanged contract, inference abstention, and `NOT_MEASURED` capability
+conclusion remained supported; no inference should be inferred from the
+available evidence and no invasive runtime repair or new governance machinery
+is justified.
 
 ## Governance lessons
 
