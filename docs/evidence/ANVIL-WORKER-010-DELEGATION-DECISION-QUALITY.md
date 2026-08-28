@@ -142,3 +142,11 @@ broker, scheduler, lease, or unattended mechanism was justified.
 The evidence supports manual delegation judgment as viable. It does not
 support encoding that judgment into an automated router; the next boundary
 should be chosen only after CGPT scrutiny of this small mixed sample.
+
+## Corrective governance rule
+
+`GREEN_ARTIFACT_HARD_STOP`: once a bounded Qwen artifact passes its declared
+mechanical contract, no further model call is permitted for that subtask unless
+a new independently authorized subtask exists. WORKER-010 Task 3 call 2 was
+unnecessary and procedurally non-compliant; it is not treated as evidence of
+additional capability.

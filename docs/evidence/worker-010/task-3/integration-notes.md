@@ -9,6 +9,10 @@ Qwen supplied the isolated `classify_success_rate(accepted, samples)` logic in
 matches that artifact exactly in validation branches, return values, and
 deterministic behavior; it was retained without repair or semantic alteration.
 
+Call 1 passed its declared mechanical contract. The later call-2 response was
+not needed, was not justified by a mechanical failure, and contributed nothing
+to acceptance. The task's actual Qwen result is therefore first-call GREEN.
+
 ## Engineer-owned integration
 
 The Engineer integration imports `classify_success_rate` into
