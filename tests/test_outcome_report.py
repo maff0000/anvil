@@ -78,3 +78,18 @@ def test_render_format_is_deterministic() -> None:
     assert "| 1 | accepted | true | true | false | 1.234568 | 7 |" in render_outcome_report(
         outcomes
     )
+
+
+def test_render_formats_very_large_integer_duration() -> None:
+    duration = 10**400
+    report = render_outcome_report(
+        [outcome("accepted", True, True, False, duration, 7)]
+    )
+    formatted_duration = f"{duration}.000000"
+
+    assert f"- Mean wall seconds: {formatted_duration}" in report
+    assert f"- Median wall seconds: {formatted_duration}" in report
+    assert (
+        f"| 1 | accepted | true | true | false | {formatted_duration} | 7 |"
+        in report
+    )

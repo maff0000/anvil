@@ -73,13 +73,13 @@ def render_outcome_report(outcomes: Sequence["AttemptOutcome"]) -> str:
     return "\n".join(lines) + "\n"
 
 
-def _as_decimal(value: int | float) -> Decimal:
+def _as_decimal(value: int | float | Decimal) -> Decimal:
     """Convert a validated numeric duration without binary re-rounding."""
     return Decimal.from_float(value) if isinstance(value, float) else Decimal(value)
 
 
 def _format_seconds(value: int | float | Decimal) -> str:
-    return f"{value:.6f}"
+    return f"{_as_decimal(value):.6f}"
 
 
 def _format_bool(value: bool) -> str:
