@@ -114,7 +114,9 @@ warranted. The first Auditor returned `RED` for evidence incompleteness and
 the false diff-check claim. Axiom corrected those issues. A second Auditor then
 returned `RED` because the original evidence used the incorrect `1/80 -> 1.3%`
 expectation. Axiom corrected the contract and re-evaluated the exact artifact;
-the final re-audit follows without another GPU call.
+the final re-audit used no further GPU call and returned `GREEN` with high
+confidence. It confirmed the corrected evidence and rejection classification,
+with no remaining repair findings.
 
 Final classification: **LOCAL_GPU_DELEGATION_REJECTED**
 
